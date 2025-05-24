@@ -45,9 +45,9 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://cho
 
 . $PWD\steps\install-utils.ps1
 
-. $PWD\steps\install-cmder.ps1
-
 . $PWD\steps\install-fonts.ps1
+
+. $PWD\steps\install-cmder.ps1
 
 
 $WhatToDoNext = Set-Todo-Message -message "If chocolatey is installed, run refreshenv to reload the environment variables. otherwise restart your terminal" -WhatToDoNext $WhatToDoNext

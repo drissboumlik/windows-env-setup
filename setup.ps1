@@ -3,8 +3,6 @@
 
 $ProgressPreference = 'SilentlyContinue'
 
-$Global:ENV_FILE = "$PWD\.env"
-$Global:USER_ENV = Get-Env
 
 Write-Host "`nThis will setup your env with (Git, Composer, NVM, Chocolatey, Some terminal utilities, Cmder)`n"
 
@@ -60,5 +58,4 @@ $WhatToDoNext = Set-Todo-Message -message "Run ./followup.ps1 when you're done f
 What-ToDo-Next -WhatWasDoneMessages $WhatWasDoneMessages -WhatToDoNext $WhatToDoNext
 #endregion
 
-Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
-Update-SessionEnvironment
+Refresh-Env

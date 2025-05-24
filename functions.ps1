@@ -1,6 +1,20 @@
 
 $ProgressPreference = 'SilentlyContinue'
 
+function Get-Env {
+    param( [string]$filePath )
+    $envData = @{}
+
+    Get-Content $filePath | Where-Object { $_ -match "(.+)=(.+)" } | ForEach-Object {
+        $key, $value = $_ -split '=', 2
+        $envData[$key.Trim()] = $value.Trim()
+    }
+    return $envData
+}
+
+$Global:ENV_FILE = "$PWD\.env"
+$Global:USER_ENV = Get-Env -filePath $ENV_FILE
+
 function Set-Todo-Message {
     param ( [string]$message, [PSCustomObject[]]$WhatToDoNext = @() )
     
@@ -229,26 +243,31 @@ function What-ToDo-Next {
     Write-Host "`nAll tasks completed.`n`n"
 }
 
-function Get-Env {                                                                                
-    $envData = @{}                                                                                
-    Get-Content $ENV_FILE | Where-Object { $_ -match "(.+)=(.+)" } | ForEach-Object {             
-        $key, $value = $_ -split '=', 2                                                           
-        $envData[$key.Trim()] = $value.Trim()                                                     
-    }                                                                                             
-    return $envData                                                                               
-}
-
 function Set-Env {
-    param ($key, $value)
+    param ($key, $value, [string]$filePath)
     # Read the file into an array of lines
-    $envLines = Get-Content $ENV_FILE
-
+    
+    $envLines = Get-Content $filePath
+    
+    $keyFound = $false
     # Modify the line with the key
     $envLines = $envLines | ForEach-Object {
-        if ($_ -match "^$key=") { "$key=$value" }
+        if ($_ -match "^$key=") {
+            "$key=$value"
+            $keyFound = $true
+        }
         else { $_ }
+    }
+    if (-not $keyFound) {
+        $envLines += "$key=$value"
     }
 
     # Write the modified lines back to the .env file
-    $envLines | Set-Content $ENV_FILE
+    $envLines | Set-Content $filePath
 }
+
+function Refresh-Env {
+    Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
+    Update-SessionEnvironment
+}
+

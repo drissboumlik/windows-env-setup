@@ -1,10 +1,8 @@
 
-. ./functions.ps1
+. $PWD\functions.ps1
 
 $ProgressPreference = 'SilentlyContinue'
 
-$Global:ENV_FILE = "$PWD\.env"
-$Global:USER_ENV = Get-Env
 
 #region ANSWER QUESTIONS FOR WHICH STEPS TO EXECUTE
 $StepsQuestions = [ordered]@{
@@ -87,11 +85,6 @@ if ($StepsQuestions["CMDER"].Answer -eq "yes") {
         Copy-Item -Path "$downloadPath\Cmder\config\user_profile.cmd" -Destination $backupFile
     }
     Get-Content -Path "$PWD\config\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
-
-    Make-Directory "$downloadPath\env\tools"
-    Make-Directory "$downloadPath\env\tools\scripts"
-    Copy-Item -Path "$PWD\tools\scripts\set-env.ps1" -Destination "$downloadPath\env\tools\scripts\set-env.ps1"
-    Add-Alias-To-Cmder -downloadPath $downloadPath -alias "setvar=powershell -ExecutionPolicy Bypass -File ""$downloadPath\env\tools\scripts\set-env.ps1"" -variableName ""`$1"" -variableValue ""``%`$2``%"" && RefreshEnv.cmd $*"
 
     $WhatWasDoneMessages = Set-Success-Message -message "ConEmu.xml & user_aliases.cmd were added to Cmder successfully" -WhatWasDoneMessages $WhatWasDoneMessages
 }

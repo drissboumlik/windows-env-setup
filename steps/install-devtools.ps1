@@ -72,6 +72,11 @@ if ($StepsQuestions["PVM"].Answer -eq "yes") {
         git clone "https://github.com/drissboumlik/pvm" "$downloadPath\env\tools\pvm" > $null 2>&1
         Copy-Item -Path "$downloadPath\env\tools\pvm\.env.example" -Destination "$downloadPath\env\tools\pvm\.env"
         
+        $pvmEnv = Get-Env -filePath "$downloadPath\env\tools\pvm\.env"
+        if ($pvmEnv) {
+            Set-Env -key "PHP_VERSIONS_PATH" -value $pvmEnv['PHP_VERSIONS_PATH'] -filePath $ENV_FILE
+        }
+
         Update-Path-Env-Variable -variableName "$downloadPath\env\tools\pvm" -isVarName 0
         
         $WhatWasDoneMessages = Set-Success-Message -message "PVM was installed successfully" -WhatWasDoneMessages $WhatWasDoneMessages

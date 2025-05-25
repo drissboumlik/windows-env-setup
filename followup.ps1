@@ -6,9 +6,7 @@ $ProgressPreference = 'SilentlyContinue'
 
 #region ANSWER QUESTIONS FOR WHICH STEPS TO EXECUTE
 $StepsQuestions = [ordered]@{
-    GIT = [PSCustomObject]@{ Question = "- Did you already install git ? "; Answer = "no" }
     CMDER = [PSCustomObject]@{ Question = "- Did you already start cmder ? "; Answer = "no" }
-    COMPOSER = [PSCustomObject]@{ Question = "- Did you already install Composer ? "; Answer = "no" }
 }
  
 foreach ($key in $StepsQuestions.Keys) {
@@ -20,44 +18,6 @@ foreach ($key in $StepsQuestions.Keys) {
 $downloadPath = $USER_ENV["USER_ENV_PATH"]
 
 $WhatWasDoneMessages = @()
-#region ADD DELTA TO GIT CONFIG
-if ($StepsQuestions["GIT"].Answer -eq "yes") {
-    $gitConfigFile = "~/.gitconfig"
-    if (-not (Test-Path $gitConfigFile)) {
-        New-Item -Path $gitConfigFile -ItemType "File"
-    }
-
-    $backupFile = "~/.gitconfig.bak"
-    if (Test-Path $backupFile) {
-        Copy-Item -Path $backupFile -Destination $gitConfigFile
-    } else {
-        Copy-Item -Path $gitConfigFile -Destination $backupFile
-    }
-
-    try {
-        git config --global alias.alias "! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /"
-        git config --global alias.log-pretty  "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-        git config --global alias.log-pretty2 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%cs) %C(bold blue)<%an>%Creset' --abbrev-commit"
-        git config --global alias.log-pretty3 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%ch) %C(bold blue)<%an>%Creset' --abbrev-commit"
-        git config --global alias.nah "!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f"
-        $WhatWasDoneMessages = Set-Success-Message -message "Git aliases are set" -WhatWasDoneMessages $WhatWasDoneMessages
-    }
-    catch {
-        $WhatWasDoneMessages = Set-Warning-Message -message "Make sure you installed Git first !" -WhatWasDoneMessages $WhatWasDoneMessages
-    }
-    
-    try {
-        $deltaGitConfig =  Get-Content "$PWD\data\delta-git-config.txt" -Raw
-        Copy-Item -Path "$PWD\config\themes.gitconfig" -Destination "~/themes.gitconfig"
-        Add-Content -Path $gitConfigFile -Value $deltaGitConfig
-
-        $WhatWasDoneMessages = Set-Success-Message -message "Delta was added to ~/.gitconfig successfully" -WhatWasDoneMessages $WhatWasDoneMessages
-    }
-    catch {
-        $WhatWasDoneMessages = Set-Warning-Message -message "Issue with ~/.gitconfig !" -WhatWasDoneMessages $WhatWasDoneMessages
-    }
-}
-#endregion
 
 #region COPY CMDER CONFIG & ALIASES
 if ($StepsQuestions["CMDER"].Answer -eq "yes") {
@@ -87,17 +47,6 @@ if ($StepsQuestions["CMDER"].Answer -eq "yes") {
     Get-Content -Path "$PWD\config\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
 
     $WhatWasDoneMessages = Set-Success-Message -message "ConEmu.xml & user_aliases.cmd were added to Cmder successfully" -WhatWasDoneMessages $WhatWasDoneMessages
-}
-#endregion
-
-#region ADD PHP ENVIRONMENT VARIABLE TO THE PATH
-if ($StepsQuestions["COMPOSER"].Answer -eq "yes") {
-
-    # Copy composer version 1 to the composer path
-    Copy-Item -Path "$PWD\tools\composer-v1" -Destination "C:\composer\v1" -Recurse
-    Update-Path-Env-Variable -variableName "C:\composer\v1" -isVarName 0
-    
-    $WhatWasDoneMessages = Set-Success-Message -message "composer1 was successfully added to the PATH" -WhatWasDoneMessages $WhatWasDoneMessages
 }
 #endregion
 

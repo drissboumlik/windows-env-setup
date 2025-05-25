@@ -1,6 +1,5 @@
 #region DOWNLOAD COMPOSER
 if ($StepsQuestions["COMPOSER"].Answer -eq "yes") {
-    
     try {
         Write-Host "`nDownloading and installing PHP for Composer..."
         Refresh-Env
@@ -33,6 +32,5 @@ if ($StepsQuestions["COMPOSER"].Answer -eq "yes") {
     catch {
         $WhatWasDoneMessages = Set-Error-Message -message "Composer failed to install, try again" -exceptionMessage $_.InvocationInfo.PositionMessage -WhatWasDoneMessages $WhatWasDoneMessages
     }
-
 }
 #endregion

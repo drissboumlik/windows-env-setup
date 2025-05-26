@@ -16,6 +16,14 @@ This tool allows you to automate the setup of your development environment in wi
 
 ## Quick Start
 
+Clone the repo and add the directory to you Path variable.
+
+```sh
+git clone https://github.com/drissBoumlik/windows-env-setup
+cd windows-env-setup
+cp .env.example .env
+```
+
 ### Preparation
 1. Open `Windows PowerShell` as Administrator
 2. Set execution policy:

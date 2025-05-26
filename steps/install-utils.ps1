@@ -41,10 +41,10 @@ if ($StepsQuestions["TOOLS"].Answer -eq "yes") {
         $tools = $tools -join ";"
         Update-Path-Env-Variable -variableName $tool -isVarName 0
 
-        $WhatWasDoneMessages = Set-Success-Message -message "Tools (eza, delta, bat, fzf, zoxide, tldr) downloaded/installed & configured successfully" -WhatWasDoneMessages $WhatWasDoneMessages
+        $WhatWasDoneMessages = Set-Success-Message -message "Tools (eza, delta, bat, fzf, zoxide, tldr) installed successfully" -WhatWasDoneMessages $WhatWasDoneMessages
     }
     catch {
-        $WhatWasDoneMessages = Set-Error-Message -message "One of the tools (eza, delta, bat, fzf, zoxide) failed to download/install, try again" -exceptionMessage $_.InvocationInfo.PositionMessage -WhatWasDoneMessages $WhatWasDoneMessages
+        $WhatWasDoneMessages = Set-Error-Message -message "One of the tools (eza, delta, bat, fzf, zoxide) failed to install, try again" -exceptionMessage $_.InvocationInfo.PositionMessage -WhatWasDoneMessages $WhatWasDoneMessages
     }
 }
 #endregion

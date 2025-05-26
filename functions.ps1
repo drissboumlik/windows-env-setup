@@ -103,8 +103,9 @@ function Setup-Cmder {
     #endregion
 
 
-    $WhatWasDoneMessages = Set-Success-Message -message "Cmder paths were added to the PATH variable" -WhatWasDoneMessages $WhatWasDoneMessages
-    $WhatWasDoneMessages = Set-Success-Message -message "Cmder was successfully setup with (flexprompt)" -WhatWasDoneMessages $WhatWasDoneMessages
+    $WhatWasDoneMessages = Set-Success-Message -message "Cmder was installed successfully" -WhatWasDoneMessages $WhatWasDoneMessages
+    $WhatWasDoneMessages = Set-Success-Message -message "- Cmder paths were added to the PATH variable" -WhatWasDoneMessages $WhatWasDoneMessages
+    $WhatWasDoneMessages = Set-Success-Message -message "- Cmder was successfully setup with (flexprompt)" -WhatWasDoneMessages $WhatWasDoneMessages
 
     return $WhatWasDoneMessages
 }

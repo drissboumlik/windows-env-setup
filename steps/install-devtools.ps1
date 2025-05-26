@@ -25,13 +25,13 @@ if ($StepsQuestions["GIT"].Answer -eq "yes") {
         git config --global alias.log-pretty2 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%cs) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.log-pretty3 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%ch) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.nah "!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f"
-        $WhatWasDoneMessages = Set-Success-Message -message "Git aliases are set" -WhatWasDoneMessages $WhatWasDoneMessages
+        $WhatWasDoneMessages = Set-Success-Message -message "- Git aliases are set" -WhatWasDoneMessages $WhatWasDoneMessages
 
         $deltaGitConfig =  Get-Content "$PWD\data\delta-git-config.txt" -Raw
         Copy-Item -Path "$PWD\config\themes.gitconfig" -Destination "~/themes.gitconfig"
         Add-Content -Path $gitConfigFile -Value $deltaGitConfig
 
-        $WhatWasDoneMessages = Set-Success-Message -message "Delta was added to ~/.gitconfig successfully" -WhatWasDoneMessages $WhatWasDoneMessages
+        $WhatWasDoneMessages = Set-Success-Message -message "- Delta was added to ~/.gitconfig successfully" -WhatWasDoneMessages $WhatWasDoneMessages
     }
     catch {
         $WhatWasDoneMessages = Set-Error-Message -message "Git failed to install, try again" -exceptionMessage $_.InvocationInfo.PositionMessage -WhatWasDoneMessages $WhatWasDoneMessages

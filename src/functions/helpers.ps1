@@ -25,14 +25,14 @@ function Log-Data {
 function Get-User-Answers {
     
     $StepsQuestions = [ordered]@{
-        GIT = [PSCustomObject]@{ Question = "- Download Git ?"; Answer = "no" }
-        NVM = [PSCustomObject]@{ Question = "- Download NVM (Node Version Manager) ?"; Answer = "no" }
-        "PVM/COMPOSER" = [PSCustomObject]@{ Question = "- Download PVM (PHP Version Manager) & Composer ?"; Answer = "no" }
-        SCRIPTS = [PSCustomObject]@{ Question = "- Download user scripts ?"; Answer = "no" }
-        REDIS = [PSCustomObject]@{ Question = "- Download Redis ?"; Answer = "no" }
-        TOOLS = [PSCustomObject]@{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr) ?"; Answer = "no" }
-        CMDER = [PSCustomObject]@{ Question = "- Download & Configure Cmder ?"; Answer = "no" }
-        FONTS = [PSCustomObject]@{ Question = "- Download Nerd Fonts "; Answer = "no" }
+        GIT = @{ Question = "- Download Git ?"; Answer = "no" }
+        NVM = @{ Question = "- Download NVM (Node Version Manager) ?"; Answer = "no" }
+        "PVM/COMPOSER" = @{ Question = "- Download PVM (PHP Version Manager) & Composer ?"; Answer = "no" }
+        SCRIPTS = @{ Question = "- Download user scripts ?"; Answer = "no" }
+        REDIS = @{ Question = "- Download Redis ?"; Answer = "no" }
+        TOOLS = @{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr) ?"; Answer = "no" }
+        CMDER = @{ Question = "- Download & Configure Cmder ?"; Answer = "no" }
+        FONTS = @{ Question = "- Download Nerd Fonts "; Answer = "no" }
     }
 
     foreach ($key in $StepsQuestions.Keys) {
@@ -44,7 +44,7 @@ function Get-User-Answers {
 }
 function Get-Followup-Answers {
     $StepsQuestions = [ordered]@{
-        CMDER = [PSCustomObject]@{ Question = "- Did you already start cmder ? "; Answer = "no" }
+        CMDER = @{ Question = "- Did you already start cmder ? "; Answer = "no" }
     }
     
     foreach ($key in $StepsQuestions.Keys) {
@@ -64,6 +64,7 @@ function Install-Chocolatey {
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"
+            exception = $_
         }
         
         return @{ code = -1; messages = @(Set-Error-Message -message "Chocolatey failed or is already installed, try again") }
@@ -71,11 +72,11 @@ function Install-Chocolatey {
 }
 
 function Set-Todo-Message {
-    param ( [string]$message )
+    param ( $message )
     
     $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim())" }) -join "`n"
 
-    return [PSCustomObject]@{
+    return @{
         Message = $message
         ForegroundColor = "Black"
         BackgroundColor = "Gray"
@@ -83,11 +84,11 @@ function Set-Todo-Message {
 }
 
 function Set-Success-Message {
-    param ( [string]$message )
+    param ( $message )
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim()) :)" }) -join "`n"
     
-    return [PSCustomObject]@{
+    return @{
         Message = $message
         ForegroundColor = "Black"
         BackgroundColor = "Green"
@@ -95,14 +96,14 @@ function Set-Success-Message {
 }
 
 function Set-Error-Message {
-    param ( [string]$message, $exceptionMessage = $null )
+    param ( $message, $exceptionMessage = $null )
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim()) :(" }) -join "`n"
     if ($exceptionMessage) {
         $message += "`n    --> $exceptionMessage"
     }
 
-    return [PSCustomObject]@{
+    return @{
         Message = $message
         ForegroundColor = "Black"
         BackgroundColor = "Red"
@@ -110,7 +111,7 @@ function Set-Error-Message {
 }
 
 function Download-File {
-    param ( [string]$url, [string]$output )
+    param ( $url, $output )
     
     try {
         Invoke-WebRequest -Uri $url -OutFile $output
@@ -148,7 +149,7 @@ function Is-Directory-Exists {
 }
 
 function Make-Directory {
-    param ( [string]$path )
+    param ( $path )
 
     try {
         if ([string]::IsNullOrWhiteSpace($path)) {
@@ -167,7 +168,7 @@ function Make-Directory {
 }
 
 function Extract-Zip {
-    param ( [string]$zipPath, [string]$extractPath )
+    param ( $zipPath, $extractPath )
     try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $extractPath)
@@ -184,9 +185,9 @@ function Extract-Zip {
 
 function Prompt-YesOrNoWithDefault {
     param(
-        [string]$message = 'Do you want to continue ? (yes/no)',
+        $message = 'Do you want to continue ? (yes/no)',
         [ValidateSet("yes", "no")]
-        [string]$defaultOption = "no"
+        $defaultOption = "no"
     )
 
     $promptMessage = "$message (Default: $defaultOption)"
@@ -205,7 +206,7 @@ function Prompt-YesOrNoWithDefault {
 }
 
 function Add-Env-Variable {
-    param( [string]$newVariableName, [string]$newVariableValue )
+    param( $newVariableName, $newVariableValue )
     
         $output = Set-EnvVar -name $newVariableName -value $newVariableValue
         
@@ -213,21 +214,21 @@ function Add-Env-Variable {
 }
 
 function Append-To-Env-Variable {
-    param ( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1 )
+    param ( $entry, $targetVariable, $asVarRef = 1 )
     
     $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
     return $code
 }
 
 function Remove-From-Env-Variable {
-    param ( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1 )
+    param ( $entry, $targetVariable, $asVarRef = 1 )
     
     $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
     return $code
 }
 
 function Update-Env-Variable {
-    param( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1, [boolean]$remove = 0 )
+    param( $entry, $targetVariable, $asVarRef = 1, $remove = 0 )
 
     $resolvedEntry = if ($asVarRef -eq 1) { "%$entry%" } else { $entry }
     $currentValue = [System.Environment]::GetEnvironmentVariable($targetVariable, [System.EnvironmentVariableTarget]::Machine)
@@ -252,7 +253,7 @@ function Update-Env-Variable {
 }
 
 function Update-Path-Env-Variable {
-    param( [string]$entry, [boolean]$asVarRef = 1, [boolean]$remove = 0 )
+    param( $entry, $asVarRef = 1, $remove = 0 )
     
     $code = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
     $optimized = Optimize-SystemPath
@@ -261,22 +262,20 @@ function Update-Path-Env-Variable {
 }
 
 function Print-Messages {
-    param( [PSCustomObject[]]$messages = @(), [PSCustomObject[]]$todos = @() )
+    param( $messages = @(), $todos = @() )
 
     if ($messages.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
         Write-Host "# Results :"
         foreach ($msg in $messages) {
-            $message = $msg.Message
-            Write-Host $message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
+            Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
-    }    
+    }
     if ($todos.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
-        Write-Host "# TODOs :"
+        Write-Host "# Todos :"
         foreach ($msg in $todos) {
-            $message = $msg.Message
-            Write-Host $message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
+            Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
     }
     Write-Host "`n==========================================================================================`n"

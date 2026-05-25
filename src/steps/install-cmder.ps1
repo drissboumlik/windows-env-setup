@@ -1,5 +1,5 @@
 function Setup-Cmder {
-    param ( [string]$downloadPath )
+    param ( $downloadPath )
     try {
         Write-Host "`nDownloading & Extracting Cmder..."
         $code = Download-File -url $CMDER_URL -output "$downloadPath\Cmder.zip"

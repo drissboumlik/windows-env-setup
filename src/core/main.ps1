@@ -28,8 +28,6 @@ function Start-Setup {
     $WhatToDoNext = @()
     $WhatToDoNext += Set-Todo-Message -message "Your dev path is '$customPath'"
 
-    $overrideExistingEnvVars = Prompt-YesOrNoWithDefault -message "`nWould you like to override the existing environment variables"
-
     $output = Install-Chocolatey
 
     if ($StepsQuestions["GIT"].Answer -eq "yes") {
@@ -67,7 +65,7 @@ function Start-Setup {
     }
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
-        $results += Install-Cmder -downloadPath $customPath -overrideExistingEnvVars $overrideExistingEnvVars
+        $results += Install-Cmder -downloadPath $customPath
     }
 
     $code = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1

@@ -214,7 +214,7 @@ function Add-Env-Variable {
     }
 
     if ($updatePath -eq 1) {
-        Update-Path-Env-Variable -variableName $newVariableName
+        $updated = Update-Path-Env-Variable -variableName $newVariableName
     }
 }
 

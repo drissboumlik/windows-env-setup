@@ -19,6 +19,7 @@ $Global:STORAGE_PATH = "$SETUP_ROOT\storage"
 
 # Log paths
 $Global:LOG_ERROR_PATH = "$STORAGE_PATH\logs\error.log"
+$Global:PATH_VAR_BACKUP_PATH = "$STORAGE_PATH\logs\path.bak.log"
 
 # Links
 $Global:CHOCOLATEY_INSTALL_URL = 'https://chocolatey.org/install.ps1'

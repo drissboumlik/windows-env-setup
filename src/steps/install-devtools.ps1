@@ -78,11 +78,6 @@ function Install-Pvm {
         $pvmPath = "$downloadPath\env\tools\pvm"
         git clone $PVM_URL $pvmPath > $null 2>&1
         
-        $updated = Update-Path-Env-Variable -variableName $pvmPath -isVarName 0
-        if ($updated -ne 0) {
-            throw "Failed to update Path environment variable with $pvmPath"
-        }
-
         return @{ code = 0; message = 'PVM was installed successfully' }
     } catch {
         $logged = Log-Data -data @{
@@ -134,10 +129,11 @@ function Install-Composer-V1 {
         }
     
         # Copy composer version 1 to the composer path
-        Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination "$COMPOSER_INSTALLATION_PATH\v1" -Recurse
-        $updated = Update-Path-Env-Variable -variableName "$COMPOSER_INSTALLATION_PATH\v1" -isVarName 0
+        $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
+        Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
+        $updated = Append-To-Env-Variable -entry $composerV1Path -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
         if ($updated -ne 0) {
-            throw "Failed to update Path environment variable with $toolsPath"
+            throw "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"
         }
     
         return 0

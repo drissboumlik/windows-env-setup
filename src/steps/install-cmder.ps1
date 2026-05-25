@@ -21,11 +21,22 @@ function Setup-Cmder {
             "$downloadPath\Cmder\bin",
             "$downloadPath\Cmder"
         )
-        $cmderStuff = $cmderStuff -join ";"
-        Add-Env-Variable -newVariableName "cmder_paths" -newVariableValue $cmderStuff -updatePath 1 -overrideExistingEnvVars $overrideExistingEnvVars
 
+        $errors = @()
+        $cmderStuff | ForEach-Object {
+            $code = Append-To-Env-Variable -entry $_ -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
+            if ($code -ne 0) {
+                $errors += "Failed to add '$_' to the PATH variable"
+            }
+        }
+        
         $message = 'Cmder was installed successfully' 
-        $message += "`nCmder paths were added to the PATH variable"
+        
+        if ($errors.Count -ne 0) {
+            $message += "`nCmder was installed but with some issues : `n" + ($errors -join "`n")
+        } else {
+            $message += "`nCmder paths were added to the PATH variable"
+        }
 
         return @{ code = 0; message = $message }
     } catch {

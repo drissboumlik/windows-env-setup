@@ -97,7 +97,7 @@ function Set-Success-Message {
 function Set-Error-Message {
     param ( [string]$message, $exceptionMessage = $null )
 
-    $message = "- $message :("
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim()) :(" }) -join "`n"
     if ($exceptionMessage) {
         $message += "`n    --> $exceptionMessage"
     }
@@ -205,47 +205,59 @@ function Prompt-YesOrNoWithDefault {
 }
 
 function Add-Env-Variable {
-    param( [string]$newVariableName, [string]$newVariableValue,
-        [boolean]$updatePath = 0, $overrideExistingEnvVars = "no" )
+    param( [string]$newVariableName, [string]$newVariableValue )
     
-    $existingVariableName = [System.Environment]::GetEnvironmentVariable($newVariableName, [System.EnvironmentVariableTarget]::Machine)
-    if ($existingVariableName -eq $null -or $overrideExistingEnvVars -eq "yes") {
         $output = Set-EnvVar -name $newVariableName -value $newVariableValue
-    }
+        
+        return $output
+}
 
-    if ($updatePath -eq 1) {
-        $updated = Update-Path-Env-Variable -variableName $newVariableName
-    }
+function Append-To-Env-Variable {
+    param ( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1 )
+    
+    $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
+    return $code
+}
+
+function Remove-From-Env-Variable {
+    param ( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1 )
+    
+    $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
+    return $code
 }
 
 function Update-Env-Variable {
-    param( [string]$variableName, [string]$variableToUpdate, [boolean]$isVarName = 1, [boolean]$remove = 0 )
+    param( [string]$entry, [string]$targetVariable, [boolean]$asVarRef = 1, [boolean]$remove = 0 )
 
-    $currentPath = [System.Environment]::GetEnvironmentVariable($variableToUpdate, [System.EnvironmentVariableTarget]::Machine)
+    $resolvedEntry = if ($asVarRef -eq 1) { "%$entry%" } else { $entry }
+    $currentValue = [System.Environment]::GetEnvironmentVariable($targetVariable, [System.EnvironmentVariableTarget]::Machine)
+    $entries = $currentValue -split ";" | Where-Object { $_ -ne "" }
     if ($remove -eq 1) {
-        $pathArray = $currentPath -split ";"
-        if ($isVarName -eq 1) {
-            $newPathArray = $pathArray | Where-Object { $_ -ne "%$variableName%" }
-        } else {
-            $newPathArray = $pathArray | Where-Object { $_ -ne "$variableName" }
+        $updated = $entries | Where-Object { $_ -ne $resolvedEntry }
+        if ($updated.Count -eq $entries.Count) {
+            Write-Warning "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed."
+            return -1
         }
-        $currentPath = ($newPathArray -join ";")
     } else {
-        if ($isVarName -eq 1) {
-            $currentPath += ";%$variableName%"
-        } else {
-            $currentPath += ";$variableName"
+        if ($resolvedEntry -in $entries) {
+            Write-Warning "Entry '$entry' already exists in $TargetVariable — skipping."
+            return -1
         }
+        $updated = $entries + $resolvedEntry
     }
-    [System.Environment]::SetEnvironmentVariable($variableToUpdate, $currentPath, [System.EnvironmentVariableTarget]::Machine)
+    $newValue = $updated -join ";"
+    [System.Environment]::SetEnvironmentVariable($targetVariable, $newValue, [System.EnvironmentVariableTarget]::Machine)
+    
+    return 0
 }
 
 function Update-Path-Env-Variable {
-    param( [string]$variableName, [boolean]$isVarName = 1, [boolean]$remove = 0 )
-    Update-Env-Variable -variableName $variableName -variableToUpdate "PATH" -isVarName $isVarName -remove $remove
+    param( [string]$entry, [boolean]$asVarRef = 1, [boolean]$remove = 0 )
+    
+    $code = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
     $optimized = Optimize-SystemPath
     
-    return $optimized
+    return $code
 }
 
 function Print-Messages {

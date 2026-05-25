@@ -10,9 +10,10 @@ function Install-UserScripts {
         if ($created -ne 0) {
             throw "Failed to create tools/bin directory at $toolsPath"
         }
-        $updated = Update-Path-Env-Variable -variableName $toolsPath -isVarName 0
+
+        $updated = Append-To-Env-Variable -entry $toolsPath -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
         if ($updated -ne 0) {
-            throw "Failed to update Path environment variable with $toolsPath"
+            throw "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$toolsPath'"
         }
     
         Get-ChildItem "$downloadPath\scripts\src\commands\*" -Directory | ForEach-Object {

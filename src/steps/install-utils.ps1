@@ -20,7 +20,6 @@ function Install-Delta {
         choco install delta -y > $null 2>&1;
         
         return @{ code = 0; message = 'DELTA was installed successfully' }
-        return 0
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - DELTA failed to install"

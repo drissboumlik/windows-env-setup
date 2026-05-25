@@ -17,7 +17,6 @@ function Install-UserScripts {
     
         Get-ChildItem "$downloadPath\scripts\src\commands\*" -Directory | ForEach-Object {
             Get-ChildItem "$($_.FullName)\*.ps1" | ForEach-Object {
-                Write-Host $_.FullName
                 $batFilePath = "$toolsPath\$($_.BaseName).bat"
                 $batContent = Get-Content "$USER_SCRIPTS_FILES_PATH\skeleton.bat" -Raw
                 $batContent = $batContent -replace '__FILE_TARGET__', $_.FullName

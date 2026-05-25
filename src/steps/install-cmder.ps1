@@ -1,5 +1,5 @@
 function Setup-Cmder {
-    param ( [string]$downloadPath, $overrideExistingEnvVars = "no" )
+    param ( [string]$downloadPath )
     try {
         Write-Host "`nDownloading & Extracting Cmder..."
         $code = Download-File -url $CMDER_URL -output "$downloadPath\Cmder.zip"
@@ -67,10 +67,10 @@ function Install-Flexprompt {
 }
 
 function Install-Cmder {
-    param ($downloadPath, $overrideExistingEnvVars)
+    param ($downloadPath)
 
     try {
-        $result = Setup-Cmder -downloadPath $downloadPath -overrideExistingEnvVars $overrideExistingEnvVars
+        $result = Setup-Cmder -downloadPath $downloadPath
         
         if ($result.code -ne 0) {
             return $result

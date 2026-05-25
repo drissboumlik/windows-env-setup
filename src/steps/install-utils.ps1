@@ -59,6 +59,7 @@ function Install-Fzf {
         return @{ code = -1; message = 'FZF failed to install, try again!' }
     }
 }
+
 function Install-Zoxide {
     try {
         Write-Host "`nInstalling ZOXIDE/Z (better cd)..."
@@ -73,6 +74,7 @@ function Install-Zoxide {
         return @{ code = -1; message = 'ZOXIDE failed to install, try again!' }
     }
 }
+
 function Install-Tldr {
     try {
         Write-Host "`nInstalling TLDR (simplified man pages)..."

@@ -117,7 +117,6 @@ function Customize-Cmder {
         
         Get-Content -Path "$CMDER_FILES_PATH\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
     
-        
         return @{ code = 0; message = 'ConEmu.xml user_profile.cmd & user_aliases.cmd were added to Cmder successfully' }
     } catch {
         $logged = Log-Data -data @{
@@ -127,7 +126,6 @@ function Customize-Cmder {
         return @{ code = -1; message = 'Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder' }
     }
 }
-
 
 function Configure-Cmder {
     param ($downloadPath)

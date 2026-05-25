@@ -79,7 +79,6 @@ function Start-Setup {
     return 0
 }
 
-
 function Follow-Up {
     $StepsQuestions = Get-Followup-Answers
 

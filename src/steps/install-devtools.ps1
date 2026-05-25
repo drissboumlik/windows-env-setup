@@ -1,6 +1,4 @@
 
-$ProgressPreference = 'SilentlyContinue'
-
 function Install-Git {
     try {
         Write-Host "`nDownloading and installing Git..."

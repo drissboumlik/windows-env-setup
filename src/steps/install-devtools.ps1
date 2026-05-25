@@ -96,9 +96,8 @@ function Install-Composer {
     
     try {
         Write-Host "`nDownloading and installing PHP for Composer..."
-        Refresh-Env
-        pvm setup > $null 2>&1
-        pvm install latest x64 TS > $null 2>&1
+        & "$downloadPath\env\tools\pvm\pvm.bat" setup > $null 2>&1
+        & "$downloadPath\env\tools\pvm\pvm.bat" install latest x64 TS > $null 2>&1
         
         Write-Host "`nInstalling Composer..."
         $phpPath = Get-ChildItem "$downloadPath\env\tools\pvm\storage\php" -Directory | Select-Object -First 1 | Select-Object -ExpandProperty FullName

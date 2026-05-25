@@ -58,7 +58,7 @@ function Get-Followup-Answers {
 function Install-Chocolatey {
     try {
         Write-Host "`nDownloading and installing Chocolatey..."
-        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString(""))
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
         
         return 0
     } catch {
@@ -269,11 +269,6 @@ function Print-Messages {
     }
     Write-Host "`n==========================================================================================`n"
     Write-Host "`nAll tasks completed.`n`n"
-}
-
-function Refresh-Env {
-    Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 -Global
-    Update-SessionEnvironment
 }
 
 function Is-Admin {

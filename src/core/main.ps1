@@ -76,8 +76,6 @@ function Start-Setup {
 
     Print-Messages -messages $WhatWasDoneMessages -todos $WhatToDoNext
 
-    Refresh-Env
-    
     return 0
 }
 

@@ -19,13 +19,13 @@ function Install-Fonts {
             $message = "Fonts downloaded with some issues : `n" + ($errors -join "`n")
         }
         
-        return @{ code = 0; message = $message; todo = "Install downloaded font and Add it to cmder settings." }
+        return @{ code = 0; messages = $message; todo = "Install downloaded font and Add it to cmder settings." }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"
             exception = $_
         }
         
-        return @{ code = -1; message = 'Fonts failed to download, try again!' }
+        return @{ code = -1; messages = 'Fonts failed to download, try again!' }
     }
 }

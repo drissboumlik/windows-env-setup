@@ -5,8 +5,6 @@ function Start-Setup {
 
     $StepsQuestions = Get-User-Answers
 
-    $results = @()
-
     $customPath = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
     
     if ([string]::IsNullOrWhiteSpace($customPath)) {
@@ -28,7 +26,9 @@ function Start-Setup {
     $WhatToDoNext = @()
     $WhatToDoNext += Set-Todo-Message -message "Your dev path is '$customPath'"
 
-    $output = Install-Chocolatey
+    $results = @()
+
+    $results += Install-Chocolatey
 
     if ($StepsQuestions["GIT"].Answer -eq "yes") {
         $results += Install-Git
@@ -76,14 +76,9 @@ function Start-Setup {
     }
 
     $results | Foreach-Object {
-        if ($_.code -eq 0) {
-            $WhatWasDoneMessages += Set-Success-Message -message $_.message
-        } else {
-            $WhatWasDoneMessages += Set-Error-Message -message $_.message
-        }
-        
-        if ($_.todo) {
-            $WhatToDoNext += Set-Todo-Message -message $_.todo
+        $WhatWasDoneMessages += $_.messages
+        if ($_.todos) {
+            $WhatToDoNext += $_.todos
         }
     }
 
@@ -106,11 +101,7 @@ function Follow-Up {
 
     $WhatWasDoneMessages = @()
     $results | Foreach-Object {
-        if ($_.code -eq 0) {
-            $WhatWasDoneMessages += Set-Success-Message -message $_.message
-        } else {
-            $WhatWasDoneMessages += Set-Error-Message -message $_.message
-        }
+        $WhatWasDoneMessages += $_.message
     }
 
     Print-Messages -messages $WhatWasDoneMessages

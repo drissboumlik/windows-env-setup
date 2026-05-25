@@ -30,22 +30,22 @@ function Setup-Cmder {
             }
         }
         
-        $message = 'Cmder was installed successfully' 
+        $message = @(Set-Success-Message -message 'Cmder was installed successfully')
         
         if ($errors.Count -ne 0) {
-            $message += "`nCmder was installed but with some issues : `n" + ($errors -join "`n")
+            $message += @(Set-Error-Message -message "Cmder was installed but with some issues : `n" + ($errors -join "`n"))
         } else {
-            $message += "`nCmder paths were added to the PATH variable"
+            $message += @(Set-Success-Message -message "Cmder paths were added to the PATH variable")
         }
 
-        return @{ code = 0; message = $message }
+        return @{ code = 0; messages = $message }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - CMDER failed to install"
             exception = $_
         }
         
-        return @{ code = -1; message = 'CMDER failed to install, Try again!' }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'CMDER failed to install, Try again!') }
     }
 }
 
@@ -57,12 +57,17 @@ function Install-Flexprompt {
 
         Copy-Item -Path "$CMDER_FILES_PATH\flexprompt_autoconfig.lua" -Destination "$downloadPath\Cmder\config"
         Remove-Item -Path "$downloadPath\clink-flex-prompt" -Recurse -Force
-        return 0
+        
+        return @{
+            code = 0;
+            messages = @(Set-Success-Message -message "Flexprompt installed successfully");
+            todos = @(Set-Todo-Message -message "Start cmder and Run 'flexprompt configure' to customize the prompt style.")
+        }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - FlexPrompt failed to install"
         }
-        return -1
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Flexprompt failed to install, try installing it manually!') }
     }
 }
 
@@ -76,18 +81,14 @@ function Install-Cmder {
             return $result
         }
         
-        $result.todo = 'Start cmder and Run to check for any updates : > clink update'
+        $result.todos += Set-Todo-Message -message "Start cmder and Run 'clink update' to check for any updates"
         
-        $code = Install-Flexprompt
-        if ($code -eq 0) {
-            $result.message += "`nCmder was successfully setup with (flexprompt)"
-            $result.todo += "`nStart cmder and Run 'flexprompt configure' to customize the prompt style."
-        } else {
-            $result.message += "`nFlexprompt failed to install, try installing it manually!"
-        }
+        $flexpromptInstaller = Install-Flexprompt
+        $result.messages += $flexpromptInstaller.messages
+        $result.todos += $flexpromptInstaller.todos
         
-        $configured = Customize-Cmder -downloadPath $downloadPath
-        $result.message += "`n$($configured.message)"
+        $cmderCustomized = Customize-Cmder -downloadPath $downloadPath
+        $result.messages += $cmderCustomized.messages
 
         return $result
     } catch {
@@ -96,7 +97,7 @@ function Install-Cmder {
             exception = $_
         }
         
-        return @{ code = -1; message = 'Issue with installing cmder, try again!' }
+        return @{ code = -1; messages = 'Issue with installing cmder, try again!' }
     }
 }
 
@@ -128,13 +129,13 @@ function Customize-Cmder {
         
         Get-Content -Path "$CMDER_FILES_PATH\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
     
-        return @{ code = 0; message = 'ConEmu.xml user_profile.cmd & user_aliases.cmd were added to Cmder successfully' }
+        return @{ code = 0; messages = 'ConEmu.xml user_profile.cmd & user_aliases.cmd were added to Cmder successfully' }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder"
             exception = $_
         }
-        return @{ code = -1; message = 'Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder' }
+        return @{ code = -1; messages = 'Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder' }
     }
 }
 
@@ -168,13 +169,14 @@ function Configure-Cmder {
     
         $message = 'Cmder configured successfully'
         $message += "`nConEmu.xml & user_aliases.cmd were added to Cmder successfully";
+        $messages = @(Set-Success-Message -message $message)
         
-        return @{ code = 0; message = $message }
+        return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Failed to configure Cmder"
             exception = $_
         }
-        return @{ code = -1; message = 'Failed to configure Cmder, try again!' }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to configure Cmder, try again!') }
     }
 }

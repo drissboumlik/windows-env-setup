@@ -60,13 +60,13 @@ function Install-Chocolatey {
         Write-Host "`nDownloading and installing Chocolatey..."
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
         
-        return 0
+        return @{ code = 0; messages = @(Set-Success-Message -message "Chocolatey installed successfully") }
     } catch {
-        Write-Host "Chocolatey failed to install, try again"
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"
         }
-        return -1
+        
+        return @{ code = -1; messages = @(Set-Error-Message -message "Chocolatey failed or is already installed, try again") }
     }
 }
 

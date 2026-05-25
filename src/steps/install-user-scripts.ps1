@@ -11,27 +11,40 @@ function Install-UserScripts {
             throw "Failed to create tools/bin directory at $toolsPath"
         }
 
+        $messages = @()
+        
         $updated = Append-To-Env-Variable -entry $toolsPath -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
         if ($updated -ne 0) {
-            throw "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$toolsPath'"
+            $messages += @(Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$toolsPath'")
         }
     
+        $errors = @()
         Get-ChildItem "$downloadPath\scripts\src\commands\*" -Directory | ForEach-Object {
             Get-ChildItem "$($_.FullName)\*.ps1" | ForEach-Object {
-                $batFilePath = "$toolsPath\$($_.BaseName).bat"
-                $batContent = Get-Content "$USER_SCRIPTS_FILES_PATH\skeleton.bat" -Raw
-                $batContent = $batContent -replace '__FILE_TARGET__', $_.FullName
-                Add-Content -Path $batFilePath -Value $batContent | Out-Null
+                try {
+                    $batFilePath = "$toolsPath\$($_.BaseName).bat"
+                    $batContent = Get-Content "$USER_SCRIPTS_FILES_PATH\skeleton.bat" -Raw
+                    $batContent = $batContent -replace '__FILE_TARGET__', $_.FullName
+                    Set-Content -Path $batFilePath -Value $batContent | Out-Null
+                } catch {
+                    $errors += @(Set-Error-Message -message "Failed to create .bat file for '$($_.Name)' command")
+                }
             } | Out-Null
         } | Out-Null
         
-        return @{ code = 0; message = 'User scripts were installed successfully' }
+        if ($errors.Count -eq 0) {
+            $messages += @(Set-Success-Message -message 'User scripts were installed successfully')
+        } else {
+            $messages += @(Set-Error-Message -message "User scripts were installed with some issues : `n" + ($errors -join "`n"))
+        }
+        
+        return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Failed to clone user scripts repository"
             exception = $_
         }
         
-        return @{ code = -1; message = 'Failed to clone user scripts repository, try again!' }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone user scripts repository, try again!') }
     }
 }

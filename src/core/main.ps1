@@ -70,6 +70,13 @@ function Start-Setup {
         $results += Install-Cmder -downloadPath $customPath -overrideExistingEnvVars $overrideExistingEnvVars
     }
 
+    $code = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
+    if ($code -eq 0) {
+        $WhatToDoNext += Set-Todo-Message -message "Make sure to restart your terminal for the changes to take effect."
+    } else {
+        $WhatWasDoneMessages += Set-Error-Message -message "Failed to update the Path environment variable with $DEV_TOOLS_ENV_VAR. Please fix the issue and try again."
+    }
+
     $results | Foreach-Object {
         if ($_.code -eq 0) {
             $WhatWasDoneMessages += Set-Success-Message -message $_.message

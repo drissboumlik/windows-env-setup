@@ -7,6 +7,7 @@ function Start-Setup {
 
     $results = @()
 
+    $USER_ENV_PATH = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
 
     Make-Directory -path $USER_ENV_PATH
 

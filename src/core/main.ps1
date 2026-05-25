@@ -7,21 +7,30 @@ function Start-Setup {
 
     $results = @()
 
-    $USER_ENV_PATH = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
-
-    Make-Directory -path $USER_ENV_PATH
+    $customPath = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
+    
+    if ([string]::IsNullOrWhiteSpace($customPath)) {
+        $customPath = $USER_ENV_PATH
+    }
+    
+    if ($customPath -and $customPath -notmatch '^[A-Za-z]:\\.+') {
+        Write-Host "Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools)."
+        return -1
+    }
+    
+    $created = Make-Directory -path $customPath
+    if ($created -ne 0) {
+        Write-Host "Failed to create the directory at '$customPath'. Please fix the issue and try again."
+        return -1
+    }
 
     $WhatWasDoneMessages = @()
     $WhatToDoNext = @()
-    $WhatToDoNext += Set-Todo-Message -message "Your dev path is '$USER_ENV_PATH'"
+    $WhatToDoNext += Set-Todo-Message -message "Your dev path is '$customPath'"
 
     $overrideExistingEnvVars = Prompt-YesOrNoWithDefault -message "`nWould you like to override the existing environment variables"
 
     $output = Install-Chocolatey
-    if ($output -ne 0) {
-        Write-Host "Chocolatey is required to install the other tools. Please fix the issue and try again."
-        return -1
-    }
 
     if ($StepsQuestions["GIT"].Answer -eq "yes") {
         $results += Install-Git
@@ -36,12 +45,12 @@ function Start-Setup {
     }
 
     if ($StepsQuestions["PVM/COMPOSER"].Answer -eq "yes") {
-        $results += Install-Pvm -downloadPath $USER_ENV_PATH
-        $results += Install-Composer -downloadPath $USER_ENV_PATH
+        $results += Install-Pvm -downloadPath $customPath
+        $results += Install-Composer -downloadPath $customPath
     }
 
     if ($StepsQuestions["SCRIPTS"].Answer -eq "yes") {
-        $results += Install-UserScripts -downloadPath $USER_ENV_PATH
+        $results += Install-UserScripts -downloadPath $customPath
     }
 
     if ($StepsQuestions["TOOLS"].Answer -eq "yes") {
@@ -54,11 +63,11 @@ function Start-Setup {
     }
 
     if ($StepsQuestions["FONTS"].Answer -eq "yes") {
-        $results += Install-Fonts -downloadPath $USER_ENV_PATH 
+        $results += Install-Fonts -downloadPath $customPath 
     }
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
-        $results += Install-Cmder -downloadPath $USER_ENV_PATH -overrideExistingEnvVars $overrideExistingEnvVars
+        $results += Install-Cmder -downloadPath $customPath -overrideExistingEnvVars $overrideExistingEnvVars
     }
 
     $results | Foreach-Object {
@@ -86,7 +95,7 @@ function Follow-Up {
     $results = @()
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
-        $results += Configure-Cmder -downloadPath $USER_ENV_PATH
+        $results += Configure-Cmder -downloadPath $customPath
     }
 
 

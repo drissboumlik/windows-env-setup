@@ -11,7 +11,7 @@ $Global:FONTS_FILES_PATH = "$SETUP_ROOT\files\fonts"
 $Global:USER_SCRIPTS_FILES_PATH = "$SETUP_ROOT\files\scripts"
 
 # Environment variable
-$Global:USER_ENV_PATH = "D:\DevEnv"
+$Global:USER_ENV_PATH = "C:\DevEnv"
 $Global:PHP_INSTALLATION_PATH = "C:\php"
 
 # Storage paths

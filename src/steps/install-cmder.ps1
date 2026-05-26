@@ -81,11 +81,17 @@ function Install-Cmder {
             return $result
         }
         
+        if (-not $result.ContainsKey('todos')) {
+            $result['todos'] = @()
+        }
+        
         $result.todos += Set-Todo-Message -message "Start cmder and Run 'clink update' to check for any updates"
         
         $flexpromptInstaller = Install-Flexprompt
         $result.messages += $flexpromptInstaller.messages
-        $result.todos += $flexpromptInstaller.todos
+        if ($flexpromptInstaller.todos) {
+            $result.todos += $flexpromptInstaller.todos
+        }
         
         $cmderCustomized = Customize-Cmder -downloadPath $downloadPath
         $result.messages += $cmderCustomized.messages

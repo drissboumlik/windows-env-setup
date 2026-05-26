@@ -82,7 +82,7 @@ function Start-Setup {
         }
     }
 
-    $WhatToDoNext += Set-Todo-Message -message "Run ./followup.ps1 when you're done for additional cmder configuration"
+    $WhatToDoNext += Set-Todo-Message -message "Run ./followup.bat when you're done for additional cmder configuration"
 
     Print-Messages -messages $WhatWasDoneMessages -todos $WhatToDoNext
 

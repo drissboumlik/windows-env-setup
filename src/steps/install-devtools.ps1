@@ -108,12 +108,8 @@ function Install-Composer {
 
         $messages = @(Set-Success-Message -message 'Composer was installed successfully')
         
-        $code = Install-Composer-V1
-        if ($code -eq 0) {
-            $messages += Set-Success-Message -message 'Composer version 1 was installed successfully'
-        } else {
-            $messages += Set-Error-Message -message 'Failed to install composer version 1'
-        }
+        $result = Install-Composer-V1
+        $messages += $result.messages
         
         return @{ code = 0; messages = $messages }
     } catch {
@@ -129,7 +125,7 @@ function Install-Composer-V1 {
     try {
         $code = Download-File -url $COMPOSER_V1_URL -output "$COMPOSER_FILES_PATH\v1\composer.phar"
         if ($code -ne 0) {
-            throw 'Failed to download v1\composer.phar file'
+            return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to download v1\composer.phar file') }
         }
     
         # Copy composer version 1 to the composer path
@@ -137,15 +133,15 @@ function Install-Composer-V1 {
         Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
         $updated = Append-To-Env-Variable -entry $composerV1Path -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
         if ($updated -ne 0) {
-            throw "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"
+            return @{ code = -1; messages = @(Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'") }
         }
     
-        return 0
+        return @{ code = 0; messages = @(Set-Success-Message -message 'Composer version 1 was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Composer v1 failed to install"
             exception = $_
         }
-        return -1
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Composer v1 failed to install, try again') }
     }
 }

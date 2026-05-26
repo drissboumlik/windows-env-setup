@@ -32,7 +32,7 @@ function Get-User-Answers {
         REDIS = @{ Question = "- Download Redis ?"; Answer = "no" }
         TOOLS = @{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr) ?"; Answer = "no" }
         CMDER = @{ Question = "- Download & Configure Cmder ?"; Answer = "no" }
-        FONTS = @{ Question = "- Download Nerd Fonts "; Answer = "no" }
+        FONTS = @{ Question = "- Download Nerd Fonts ?"; Answer = "no" }
     }
 
     foreach ($key in $StepsQuestions.Keys) {
@@ -44,7 +44,7 @@ function Get-User-Answers {
 }
 function Get-Followup-Answers {
     $StepsQuestions = [ordered]@{
-        CMDER = @{ Question = "- Did you already start cmder ? "; Answer = "no" }
+        CMDER = @{ Question = "- Did you already start cmder ?"; Answer = "no" }
     }
     
     foreach ($key in $StepsQuestions.Keys) {

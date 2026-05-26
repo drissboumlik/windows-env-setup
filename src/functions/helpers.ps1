@@ -1,4 +1,17 @@
 
+function Restore-Or-BackupFile {
+    param ($filePath)
+
+    $backupFile = "$filePath.bak"
+
+    if (Test-Path $backupFile) {
+        Copy-Item $backupFile $filePath -Force
+    }
+    else {
+        Copy-Item $filePath $backupFile -Force
+    }
+}
+
 function Log-Data {
     param ($data)
     

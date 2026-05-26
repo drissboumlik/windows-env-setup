@@ -143,32 +143,19 @@ function Configure-Cmder {
     param ($downloadPath)
 
     try {
-        $backupFile = "$downloadPath\Cmder\vendor\conemu-maximus5\ConEmu.xml.bak"
-        if (-not (Test-Path $backupFile)) {
-            Copy-Item -Path "$downloadPath\Cmder\vendor\conemu-maximus5\ConEmu.xml" -Destination $backupFile
-        }
+        Restore-Or-BackupFile -filePath "$downloadPath\Cmder\vendor\conemu-maximus5\ConEmu.xml"
         Copy-Item -Path "$CMDER_FILES_PATH\ConEmu.xml" -Destination "$downloadPath\Cmder\vendor\conemu-maximus5\ConEmu.xml"
         
         Copy-Item -Path "$CMDER_FILES_PATH\zoxide.lua" -Destination "$downloadPath\Cmder\config\zoxide.lua"
         
-        $backupFile = "$downloadPath\Cmder\config\user_aliases.cmd.bak"
-        if (Test-Path $backupFile) {
-            Copy-Item -Path $backupFile -Destination "$downloadPath\Cmder\config\user_aliases.cmd"
-        } else {
-            Copy-Item -Path "$downloadPath\Cmder\config\user_aliases.cmd" -Destination $backupFile
-        }
+        Restore-Or-BackupFile -filePath "$downloadPath\Cmder\config\user_aliases.cmd"
         Get-Content -Path "$CMDER_FILES_PATH\user_aliases.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_aliases.cmd"
     
-        $backupFile = "$downloadPath\Cmder\config\user_profile.cmd.bak"
-        if (Test-Path $backupFile) {
-            Copy-Item -Path $backupFile -Destination "$downloadPath\Cmder\config\user_profile.cmd"
-        } else {
-            Copy-Item -Path "$downloadPath\Cmder\config\user_profile.cmd" -Destination $backupFile
-        }
+        Restore-Or-BackupFile -filePath "$downloadPath\Cmder\config\user_profile.cmd"
         Get-Content -Path "$CMDER_FILES_PATH\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
     
         $message = 'Cmder configured successfully'
-        $message += "`nConEmu.xml & user_aliases.cmd were added to Cmder successfully";
+        $message += "`nConEmu.xml, user_aliases.cmd, user_profile.cmd & zoxide were added to Cmder successfully";
         $messages = @(Set-Success-Message -message $message)
         
         return @{ code = 0; messages = $messages }

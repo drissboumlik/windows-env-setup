@@ -2,7 +2,7 @@
 function Install-Fonts {
     param ($downloadPath)
     try {
-        Write-Host "`nDownloading Font..."
+        Write-Host "`nDownloading Fonts..."
         $nfUrls = Get-Content "$SETUP_ROOT\files\fonts\links.txt" | Where-Object { $_ -ne "" }
         Make-Directory -path "$downloadPath\fonts"
         

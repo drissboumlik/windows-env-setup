@@ -1,4 +1,35 @@
 
+function Get-User-Path {
+    param ($readFromEnvFile = $false)
+    
+    $path = $null
+
+    if ($readFromEnvFile -and (Test-Path $ENV_FILE)) {
+        Get-Content $ENV_FILE | ForEach-Object {
+            if ($_ -match "^USER_ENV_PATH=(.*)$") {
+                $path = $matches[1].Trim()
+            }
+        }
+    } else {
+        $path = 'D:\DevEnv' # Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
+    }
+    
+    if ([string]::IsNullOrWhiteSpace($path)) {
+        $path = $USER_ENV_PATH
+    }
+    
+    if ($path -and $path -notmatch '^[A-Za-z]:\\.+') {
+        Write-Host "Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools)."
+        return $null
+    }
+    
+    $path = $path.Trim()
+    
+    "USER_ENV_PATH=$path" | Set-Content $ENV_FILE -Encoding UTF8
+    
+    return $path
+}
+
 function Restore-Or-BackupFile {
     param ($filePath)
 

@@ -5,16 +5,7 @@ function Start-Setup {
 
     $StepsQuestions = Get-User-Answers
 
-    $customPath = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
-    
-    if ([string]::IsNullOrWhiteSpace($customPath)) {
-        $customPath = $USER_ENV_PATH
-    }
-    
-    if ($customPath -and $customPath -notmatch '^[A-Za-z]:\\.+') {
-        Write-Host "Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools)."
-        return -1
-    }
+    $customPath = Get-User-Path
     
     $created = Make-Directory -path $customPath
     if ($created -ne 0) {
@@ -93,15 +84,16 @@ function Follow-Up {
     $StepsQuestions = Get-Followup-Answers
 
     $results = @()
+    
+    $customPath = Get-User-Path -readFromEnvFile $true
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
         $results += Configure-Cmder -downloadPath $customPath
     }
 
-
     $WhatWasDoneMessages = @()
     $results | Foreach-Object {
-        $WhatWasDoneMessages += $_.message
+        $WhatWasDoneMessages += $_.messages
     }
 
     Print-Messages -messages $WhatWasDoneMessages

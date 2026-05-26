@@ -75,39 +75,39 @@ function Install-Chocolatey {
 function Set-Todo-Message {
     param ( $message )
     
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim())" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
     return @{
         Message = $message
-        ForegroundColor = "Black"
-        BackgroundColor = "Gray"
+        ForegroundColor = "White"
+        BackgroundColor = "Black"
     }
 }
 
 function Set-Success-Message {
     param ( $message )
 
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim()) :)" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :)" }) -join "`n"
     
     return @{
         Message = $message
-        ForegroundColor = "Black"
-        BackgroundColor = "Green"
+        ForegroundColor = "DarkGreen"
+        BackgroundColor = "Black"
     }
 }
 
 function Set-Error-Message {
     param ( $message, $exceptionMessage = $null )
 
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.Trim()) :(" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :(" }) -join "`n"
     if ($exceptionMessage) {
         $message += "`n    --> $exceptionMessage"
     }
 
     return @{
         Message = $message
-        ForegroundColor = "Black"
-        BackgroundColor = "Red"
+        ForegroundColor = "DarkYellow"
+        BackgroundColor = "Black"
     }
 }
 

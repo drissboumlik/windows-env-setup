@@ -23,13 +23,13 @@ function Install-Git {
         git config --global alias.log-pretty2 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%cs) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.log-pretty3 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%ch) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.nah "!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f"
-        $messages += @(Set-Success-Message -message "`n- Git aliases are set")
+        $messages += Set-Success-Message -message 'Git aliases are set'
 
         $deltaGitConfig = Get-Content "$GIT_FILES_PATH\delta-git-config.txt" -Raw
         Copy-Item -Path "$GIT_FILES_PATH\themes.gitconfig" -Destination "~/themes.gitconfig"
         Add-Content -Path $gitConfigFile -Value $deltaGitConfig | Out-Null
 
-        $messages += @(Set-Success-Message -message "`n- Delta was added to ~/.gitconfig successfully")
+        $messages += Set-Success-Message -message 'Delta was added to ~/.gitconfig successfully'
         
         return @{ code = 0; messages = $messages }
     } catch {
@@ -110,9 +110,9 @@ function Install-Composer {
         
         $code = Install-Composer-V1
         if ($code -eq 0) {
-            $messages += @(Set-Success-Message -message 'Composer version 1 was installed successfully')
+            $messages += Set-Success-Message -message 'Composer version 1 was installed successfully'
         } else {
-            $messages += @(Set-Error-Message -message 'Failed to install composer version 1')
+            $messages += Set-Error-Message -message 'Failed to install composer version 1'
         }
         
         return @{ code = 0; messages = $messages }

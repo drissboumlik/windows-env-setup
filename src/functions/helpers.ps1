@@ -42,6 +42,7 @@ function Get-User-Answers {
     
     return $StepsQuestions
 }
+
 function Get-Followup-Answers {
     $StepsQuestions = [ordered]@{
         CMDER = @{ Question = "- Did you already start cmder ?"; Answer = "no" }
@@ -205,14 +206,6 @@ function Prompt-YesOrNoWithDefault {
     }
 }
 
-function Add-Env-Variable {
-    param( $newVariableName, $newVariableValue )
-    
-        $output = Set-EnvVar -name $newVariableName -value $newVariableValue
-        
-        return $output
-}
-
 function Append-To-Env-Variable {
     param ( $entry, $targetVariable, $asVarRef = 1 )
     
@@ -247,9 +240,9 @@ function Update-Env-Variable {
         $updated = $entries + $resolvedEntry
     }
     $newValue = $updated -join ";"
-    [System.Environment]::SetEnvironmentVariable($targetVariable, $newValue, [System.EnvironmentVariableTarget]::Machine)
+    $output = Set-EnvVar -name $targetVariable -value $newValue
     
-    return 0
+    return $output
 }
 
 function Update-Path-Env-Variable {

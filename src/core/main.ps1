@@ -1,4 +1,4 @@
-
+﻿
 function Start-Setup {
 
     Write-Host "`nThis will setup your env with (Git, Composer, NVM, Chocolatey, Some terminal utilities, Cmder)`n"
@@ -6,7 +6,7 @@ function Start-Setup {
     $StepsQuestions = Get-User-Answers
 
     $customPath = Get-User-Path
-    
+
     $created = Make-Directory -path $customPath
     if ($created -ne 0) {
         Write-Host "Failed to create the directory at '$customPath'. Please fix the issue and try again."
@@ -52,7 +52,7 @@ function Start-Setup {
     }
 
     if ($StepsQuestions["FONTS"].Answer -eq "yes") {
-        $results += Install-Fonts -downloadPath $customPath 
+        $results += Install-Fonts -downloadPath $customPath
     }
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
@@ -84,7 +84,7 @@ function Follow-Up {
     $StepsQuestions = Get-Followup-Answers
 
     $results = @()
-    
+
     $customPath = Get-User-Path -readFromEnvFile $true
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {

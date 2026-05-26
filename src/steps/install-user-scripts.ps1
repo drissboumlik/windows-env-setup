@@ -1,7 +1,7 @@
-
+﻿
 function Install-UserScripts {
     param ($downloadPath)
-    
+
     try {
         git clone $USER_SCRIPTS_URL "$downloadPath\scripts" > $null 2>&1
 
@@ -12,12 +12,12 @@ function Install-UserScripts {
         }
 
         $messages = @()
-        
+
         $updated = Append-To-Env-Variable -entry $toolsPath -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
         if ($updated -ne 0) {
             $messages += Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$toolsPath'"
         }
-    
+
         $errors = @()
         Get-ChildItem "$downloadPath\scripts\src\commands\*" -Directory | ForEach-Object {
             Get-ChildItem "$($_.FullName)\*.ps1" | ForEach-Object {
@@ -31,20 +31,20 @@ function Install-UserScripts {
                 }
             } | Out-Null
         } | Out-Null
-        
+
         if ($errors.Count -eq 0) {
             $messages += Set-Success-Message -message 'User scripts were installed successfully'
         } else {
             $messages += Set-Error-Message -message "User scripts were installed with some issues : `n" + ($errors -join "`n")
         }
-        
+
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Failed to clone user scripts repository"
             exception = $_
         }
-        
+
         return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone user scripts repository, try again!') }
     }
 }

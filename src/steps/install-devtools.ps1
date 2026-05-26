@@ -1,11 +1,11 @@
-
+﻿
 function Install-Git {
     try {
         Write-Host "`nDownloading and installing Git..."
         choco install git.install -y > $null 2>&1
 
         $messages = @(Set-Success-Message -message 'Git was installed successfully')
-        
+
         $gitConfigFile = "~/.gitconfig"
         if (-not (Test-Path $gitConfigFile)) {
             New-Item -Path $gitConfigFile -ItemType "File"
@@ -30,14 +30,14 @@ function Install-Git {
         Add-Content -Path $gitConfigFile -Value $deltaGitConfig | Out-Null
 
         $messages += Set-Success-Message -message 'Delta was added to ~/.gitconfig successfully'
-        
+
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Git failed to install"
             exception = $_
         }
-        
+
         $message = Set-Error-Message -message 'Git failed to install, try again!'
         return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
     }
@@ -47,7 +47,7 @@ function Install-Nvm {
     try {
         Write-Host "`nDownloading and installing NVM..."
         choco install nvm -y > $null 2>&1
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'NVM was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
@@ -62,14 +62,14 @@ function Install-Redis {
     try {
         Write-Host "`nDownloading and installing REDIS..."
         choco install redis-64 --version=3.0.503 -y > $null 2>&1
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - REDIS failed to install"
             exception = $_
         }
-        
+
         return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!') }
     }
 }
@@ -81,7 +81,7 @@ function Install-Pvm {
         Write-Host "`nDownloading and installing PVM..."
         $pvmPath = "$downloadPath\env\tools\pvm"
         git clone $PVM_URL $pvmPath > $null 2>&1
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'PVM was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
@@ -94,12 +94,12 @@ function Install-Pvm {
 
 function Install-Composer {
     param($downloadPath)
-    
+
     try {
         Write-Host "`nDownloading and installing PHP for Composer..."
         & "$downloadPath\env\tools\pvm\pvm.bat" setup > $null 2>&1
         & "$downloadPath\env\tools\pvm\pvm.bat" install latest x64 TS > $null 2>&1
-        
+
         Write-Host "`nInstalling Composer..."
         $phpPath = Get-ChildItem "$downloadPath\env\tools\pvm\storage\php" -Directory | Select-Object -First 1 | Select-Object -ExpandProperty FullName
         Move-Item -Path "$phpPath\*" -Destination $PHP_INSTALLATION_PATH -Force
@@ -107,10 +107,10 @@ function Install-Composer {
         choco install composer -y --params $params > $null 2>&1
 
         $messages = @(Set-Success-Message -message 'Composer was installed successfully')
-        
+
         $result = Install-Composer-V1
         $messages += $result.messages
-        
+
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
@@ -127,7 +127,7 @@ function Install-Composer-V1 {
         if ($code -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to download v1\composer.phar file') }
         }
-    
+
         # Copy composer version 1 to the composer path
         $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
         Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
@@ -135,7 +135,7 @@ function Install-Composer-V1 {
         if ($updated -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'") }
         }
-    
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'Composer version 1 was installed successfully') }
     } catch {
         $logged = Log-Data -data @{

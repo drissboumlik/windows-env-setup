@@ -1,7 +1,7 @@
-
+﻿
 function Get-User-Path {
     param ($readFromEnvFile = $false)
-    
+
     $path = $null
 
     if ($readFromEnvFile -and (Test-Path $ENV_FILE)) {
@@ -13,20 +13,20 @@ function Get-User-Path {
     } else {
         $path = 'D:\DevEnv' # Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
     }
-    
+
     if ([string]::IsNullOrWhiteSpace($path)) {
         $path = $USER_ENV_PATH
     }
-    
+
     if ($path -and $path -notmatch '^[A-Za-z]:\\.+') {
         Write-Host "Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools)."
         return $null
     }
-    
+
     $path = $path.Trim()
-    
+
     "USER_ENV_PATH=$path" | Set-Content $ENV_FILE -Encoding UTF8
-    
+
     return $path
 }
 
@@ -45,7 +45,7 @@ function Restore-Or-BackupFile {
 
 function Log-Data {
     param ($data)
-    
+
     try {
         $logPath = if ($data.logPath) { $data.logPath } else { $LOG_ERROR_PATH }
         $created = Make-Directory -path (Split-Path $logPath)
@@ -67,7 +67,7 @@ function Log-Data {
 }
 
 function Get-User-Answers {
-    
+
     $StepsQuestions = [ordered]@{
         GIT = @{ Question = "- Download Git ?"; Answer = "no" }
         NVM = @{ Question = "- Download NVM (Node Version Manager) ?"; Answer = "no" }
@@ -83,7 +83,7 @@ function Get-User-Answers {
         $q = $StepsQuestions[$key]
         $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption "yes"
     }
-    
+
     return $StepsQuestions
 }
 
@@ -91,12 +91,12 @@ function Get-Followup-Answers {
     $StepsQuestions = [ordered]@{
         CMDER = @{ Question = "- Did you already start cmder ?"; Answer = "no" }
     }
-    
+
     foreach ($key in $StepsQuestions.Keys) {
         $q = $StepsQuestions[$key]
         $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption "no"
     }
-    
+
     return $StepsQuestions
 }
 
@@ -104,21 +104,21 @@ function Install-Chocolatey {
     try {
         Write-Host "`nDownloading and installing Chocolatey..."
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message "Chocolatey installed successfully") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"
             exception = $_
         }
-        
+
         return @{ code = -1; messages = @(Set-Error-Message -message "Chocolatey failed or is already installed, try again") }
     }
 }
 
 function Set-Todo-Message {
     param ( $message )
-    
+
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
     return @{
@@ -132,7 +132,7 @@ function Set-Success-Message {
     param ( $message )
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :)" }) -join "`n"
-    
+
     return @{
         Message = $message
         ForegroundColor = "DarkGreen"
@@ -157,10 +157,10 @@ function Set-Error-Message {
 
 function Download-File {
     param ( $url, $output )
-    
+
     try {
         Invoke-WebRequest -Uri $url -OutFile $output
-        
+
         return 0
     } catch {
         $logged = Log-Data -data @{
@@ -173,7 +173,7 @@ function Download-File {
 
 function Run-Command {
     param($command)
-    
+
     $process = Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$command`"" -Verb RunAs -WindowStyle Hidden -PassThru -Wait
     $process.WaitForExit()
     return $process.ExitCode
@@ -181,7 +181,7 @@ function Run-Command {
 
 function Is-Directory-Exists {
     param ($path)
-    
+
     try {
         if ([string]::IsNullOrWhiteSpace($path)) {
             return $false
@@ -252,14 +252,14 @@ function Prompt-YesOrNoWithDefault {
 
 function Append-To-Env-Variable {
     param ( $entry, $targetVariable, $asVarRef = 1 )
-    
+
     $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
     return $code
 }
 
 function Remove-From-Env-Variable {
     param ( $entry, $targetVariable, $asVarRef = 1 )
-    
+
     $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
     return $code
 }
@@ -285,16 +285,16 @@ function Update-Env-Variable {
     }
     $newValue = $updated -join ";"
     $output = Set-EnvVar -name $targetVariable -value $newValue
-    
+
     return $output
 }
 
 function Update-Path-Env-Variable {
     param( $entry, $asVarRef = 1, $remove = 0 )
-    
+
     $code = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
     $optimized = Optimize-SystemPath
-    
+
     return $code
 }
 
@@ -385,19 +385,19 @@ function Set-EnvVar {
 }
 
 function Optimize-SystemPath {
-    
+
     try {
         $path = Get-EnvVar-ByName -name "Path"
         if ($null -eq $path) {
             $path = ''
         }
-        $oldPath = $path 
+        $oldPath = $path
         $envVars = Get-All-EnvVars
-        
+
         $envVars.Keys | ForEach-Object {
             $envName = $_
             $envValue = $envVars[$envName]
-            
+
             if (
                 ($null -ne $envValue) -and
                 ($path.ToLower() -like "*$($envValue.ToLower())*") -and
@@ -409,7 +409,7 @@ function Optimize-SystemPath {
                 $path = [regex]::Replace($path, $pattern, "%$envName%")
             }
         }
-        
+
         $output = 0
         if ($path -ne $oldPath) {
             # Saving Path to log
@@ -420,13 +420,13 @@ function Optimize-SystemPath {
             if ($outputLog -eq 0) {
                 Write-Host "`nOriginal Path saved to '$PATH_VAR_BACKUP_PATH'"
             }
-            
+
             $output = Set-EnvVar -name "Path" -value $path
             if ($output -eq 0) {
                 Write-Host "`nPath optimized successfully" -ForegroundColor DarkGreen
             }
         }
-        
+
         return $output
     } catch {
         $logged = Log-Data -data @{

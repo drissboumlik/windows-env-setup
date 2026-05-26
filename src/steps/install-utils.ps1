@@ -1,9 +1,9 @@
-
+﻿
 function Install-Eza {
     try {
         Write-Host "`nInstalling EZA (better ls)..."
         choco install eza -y > $null 2>&1
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'EZA was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
@@ -18,7 +18,7 @@ function Install-Delta {
     try {
         Write-Host "`nInstalling DELTA (better git diff)..."
         choco install delta -y > $null 2>&1;
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'DELTA was installed successfully') }
     } catch {
         $logged = Log-Data -data @{
@@ -33,7 +33,7 @@ function Install-Bat {
     try {
         Write-Host "`nInstalling BAT (better cat)..."
         choco install bat -y > $null 2>&1
-        
+
         return @{ code = 0; messages = @(Set-Success-Message -message 'BAT was installed successfully') }
     } catch {
         $logged = Log-Data -data @{

@@ -97,7 +97,7 @@ function Install-Cmder {
             exception = $_
         }
         
-        return @{ code = -1; messages = 'Issue with installing cmder, try again!' }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Issue with installing cmder, try again!') }
     }
 }
 
@@ -129,13 +129,13 @@ function Customize-Cmder {
         
         Get-Content -Path "$CMDER_FILES_PATH\user_profile.cmd" | Add-Content -Path "$downloadPath\Cmder\config\user_profile.cmd"
     
-        return @{ code = 0; messages = 'ConEmu.xml user_profile.cmd & user_aliases.cmd were added to Cmder successfully' }
+        return @{ code = 0; messages = @(Set-Success-Message -message 'ConEmu.xml user_profile.cmd & user_aliases.cmd were added to Cmder successfully') }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder"
             exception = $_
         }
-        return @{ code = -1; messages = 'Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder' }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to add ConEmu.xml user_profile.cmd & user_aliases.cmd to Cmder') }
     }
 }
 

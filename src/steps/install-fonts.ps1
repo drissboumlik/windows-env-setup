@@ -4,13 +4,18 @@ function Install-Fonts {
     try {
         Write-Host "`nDownloading Fonts..."
         $nfUrls = Get-Content "$SETUP_ROOT\files\fonts\links.txt" | Where-Object { $_ -ne "" }
-        Make-Directory -path "$downloadPath\fonts"
+        $created = Make-Directory -path "$downloadPath\fonts"
+        if ($created -ne 0) {
+            throw "Failed to create fonts directory at '$downloadPath\fonts'"
+        }
 
         $errors = @()
         foreach ($url in $nfUrls) {
             $fileName = Split-Path $url -Leaf
-            try { Download-File -url $url -output "$downloadPath\fonts\$fileName" }
-            catch { $errors += "Fonts : Issue with $fileName" }
+            $code = Download-File -url $url -output "$downloadPath\fonts\$fileName"
+            if ($code -ne 0) {
+                $errors += "Failed to download font from '$url'"
+            }
         }
 
         if ($errors.Count -eq 0) {

@@ -25,7 +25,7 @@ function Get-User-Path {
 
     $path = $path.Trim()
 
-    "USER_ENV_PATH=$path" | Set-Content $ENV_FILE -Encoding UTF8
+    "USER_ENV_PATH=$path" | Set-Content -Path $ENV_FILE -Encoding UTF8
 
     return $path
 }
@@ -36,10 +36,10 @@ function Restore-Or-BackupFile {
     $backupFile = "$filePath.bak"
 
     if (Test-Path $backupFile) {
-        Copy-Item $backupFile $filePath -Force
+        Copy-Item -Path $backupFile -Destination $filePath -Force
     }
     else {
-        Copy-Item $filePath $backupFile -Force
+        Copy-Item -Path $filePath -Destination $backupFile -Force
     }
 }
 

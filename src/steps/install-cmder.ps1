@@ -11,7 +11,7 @@
         if ($code -ne 0) {
             throw "Failed to extract Cmder"
         }
-        Remove-Item "$downloadPath\Cmder.zip"
+        Remove-Item -Path "$downloadPath\Cmder.zip"
 
         $cmderStuff = @(
             "$downloadPath\Cmder\vendor\git-for-windows\usr\bin",

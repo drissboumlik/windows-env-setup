@@ -269,9 +269,9 @@ function Update-Env-Variable {
 
     $resolvedEntry = if ($asVarRef -eq 1) { "%$entry%" } else { $entry }
     $currentValue = [System.Environment]::GetEnvironmentVariable($targetVariable, [System.EnvironmentVariableTarget]::Machine)
-    $entries = $currentValue -split ";" | Where-Object { $_ -ne "" }
+    $entries = @($currentValue -split ";" | Where-Object { $_ -ne "" })
     if ($remove -eq 1) {
-        $updated = $entries | Where-Object { $_ -ne $resolvedEntry }
+        $updated = @($entries | Where-Object { $_ -ne $resolvedEntry })
         if ($updated.Count -eq $entries.Count) {
             Write-Warning "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed."
             return -1
@@ -281,7 +281,7 @@ function Update-Env-Variable {
             Write-Warning "Entry '$entry' already exists in $TargetVariable — skipping."
             return -1
         }
-        $updated = $entries + $resolvedEntry
+        $updated = @($entries + $resolvedEntry)
     }
     $newValue = $updated -join ";"
     $output = Set-EnvVar -name $targetVariable -value $newValue

@@ -11,7 +11,7 @@ function Get-User-Path {
             }
         }
     } else {
-        $path = 'D:\DevEnv' # Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
+        $path = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
     }
 
     if ([string]::IsNullOrWhiteSpace($path)) {

@@ -53,10 +53,10 @@ function Install-Flexprompt {
     try {
         Write-Host "`nDownloading & Extracting FlexPrompt..."
         git clone $CLINK_FLEX_PROMPT_URL "$downloadPath\clink-flex-prompt" > $null 2>&1
-        Move-Item -Path "$downloadPath\clink-flex-prompt\*" -Destination "$downloadPath\Cmder\config"
+        Move-Item -Path "$downloadPath\clink-flex-prompt\*" -Destination "$downloadPath\Cmder\config" -Recurse -Force
+        Remove-Item -Path "$downloadPath\clink-flex-prompt" -Recurse -Force
 
         Copy-Item -Path "$CMDER_FILES_PATH\flexprompt_autoconfig.lua" -Destination "$downloadPath\Cmder\config"
-        Remove-Item -Path "$downloadPath\clink-flex-prompt" -Recurse -Force
 
         return @{
             code = 0;

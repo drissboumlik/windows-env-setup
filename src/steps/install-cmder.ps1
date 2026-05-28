@@ -66,6 +66,7 @@ function Install-Flexprompt {
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - FlexPrompt failed to install"
+            exception = $_
         }
         return @{ code = -1; messages = @(Set-Error-Message -message 'Flexprompt failed to install, try installing it manually!') }
     }

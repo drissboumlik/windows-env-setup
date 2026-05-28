@@ -21,7 +21,6 @@ Clone the repo and add the directory to you Path variable.
 ```sh
 git clone https://github.com/drissBoumlik/windows-env-setup
 cd windows-env-setup
-cp .env.example .env
 ```
 
 ### Preparation
@@ -34,12 +33,12 @@ cp .env.example .env
 ### Installation
 1. Run initial setup:
    ```powershell
-   .\setup.ps1
+   .\setup
    ```
 2. Review execution results
 3. Run follow-up script:
    ```powershell
-   .\followup.ps1
+   .\followup
    ```
 
 ## Requirements

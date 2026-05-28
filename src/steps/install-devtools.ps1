@@ -131,12 +131,16 @@ function Install-Composer-V1 {
         # Copy composer version 1 to the composer path
         $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
         Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
+        $messages = @(Set-Success-Message -message 'Composer v1 was installed successfully')
+
         $updated = Append-To-Env-Variable -entry $composerV1Path -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
-        if ($updated -ne 0) {
-            return @{ code = -1; messages = @(Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'") }
+        if ($updated -eq 0) {
+            $messages += Set-Success-Message -message "Updated '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"
+        } else {
+            $messages += Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"
         }
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'Composer version 1 was installed successfully') }
+        return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - Composer v1 failed to install"

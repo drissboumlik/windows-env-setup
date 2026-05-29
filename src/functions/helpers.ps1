@@ -172,10 +172,34 @@ function Download-File {
 }
 
 function Run-Command {
+    param($filePath, $arguments)
+
+    $process = Start-Process `
+        -FilePath $filePath `
+        -ArgumentList $arguments `
+        -Verb RunAs `
+        -PassThru `
+        -Wait `
+        -WindowStyle Hidden
+
+    return $process.ExitCode
+}
+
+function Run-PS-Command {
     param($command)
 
-    $process = Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$command`"" -Verb RunAs -WindowStyle Hidden -PassThru -Wait
-    $process.WaitForExit()
+    $process = Start-Process `
+        -FilePath "powershell.exe" `
+        -ArgumentList @(
+            "-NoProfile",
+            "-ExecutionPolicy", "Bypass",
+            "-Command", $command
+        ) `
+        -Verb RunAs `
+        -PassThru `
+        -Wait `
+        -WindowStyle Hidden
+
     return $process.ExitCode
 }
 
@@ -233,8 +257,13 @@ function Ensure-PackageInstalled {
         if ($found) {
             return @{ code = 0; message = "$exeName already available" }
         }
+        
+        if (-not (Is-Admin)) {
+            $code = Run-Command -filePath 'choco' -arguments @('install', $chocoName, '-y')
+        } else {
+            choco install $chocoName -y > $null 2>&1
+        }
 
-        choco install $chocoName -y > $null 2>&1
 
         $found = Get-Command $exeName -ErrorAction SilentlyContinue
         if ($found) {
@@ -384,7 +413,7 @@ function Set-EnvVar {
 
         if (-not (Is-Admin)) {
             $command = "[System.Environment]::SetEnvironmentVariable('$name', '$value', [System.EnvironmentVariableTarget]::Machine)"
-            return (Run-Command -command $command)
+            return (Run-PS-Command -command $command)
         }
 
         # We already have admin rights, proceed normally

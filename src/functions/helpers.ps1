@@ -103,6 +103,12 @@ function Get-Followup-Answers {
 function Install-Chocolatey {
     try {
         Write-Host "`nDownloading and installing Chocolatey..."
+
+        $found = Get-Command 'choco' -ErrorAction SilentlyContinue
+        if ($found) {
+            return @{ code = 0; messages = @( Set-Success-Message -message 'Chocolatey is already installed' ) }
+        }
+
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
 
         return @{ code = 0; messages = @(Set-Success-Message -message "Chocolatey installed successfully") }

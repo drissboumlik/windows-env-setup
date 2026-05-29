@@ -107,10 +107,7 @@ function Install-Chocolatey {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "Chocolatey installed successfully") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"; exception = $_ }
 
         return @{ code = -1; messages = @(Set-Error-Message -message "Chocolatey failed or is already installed, try again") }
     }
@@ -163,10 +160,7 @@ function Download-File {
 
         return 0
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to download file from $url"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to download file from $url"; exception = $_ }
         return -1
     }
 }
@@ -220,10 +214,7 @@ function Extract-Zip {
 
         return 0
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to extract zip file from $zipPath"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to extract zip file from $zipPath"; exception = $_ }
         return -1
     }
 }
@@ -356,10 +347,7 @@ function Get-All-EnvVars {
     try {
         return [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Machine)
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to get all environment variables"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to get all environment variables"; exception = $_ }
         return $null
     }
 }
@@ -374,10 +362,7 @@ function Get-EnvVar-ByName {
         $name = $name.Trim()
         return [System.Environment]::GetEnvironmentVariable($name, [System.EnvironmentVariableTarget]::Machine)
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to get environment variable '$name'"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to get environment variable '$name'"; exception = $_ }
         return $null
     }
 }
@@ -400,10 +385,7 @@ function Set-EnvVar {
         [System.Environment]::SetEnvironmentVariable($name, $value, [System.EnvironmentVariableTarget]::Machine)
         return 0
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to set environment variable '$name'"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to set environment variable '$name'"; exception = $_ }
         return -1
     }
 }
@@ -453,10 +435,7 @@ function Optimize-SystemPath {
 
         return $output
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to optimize system PATH variable"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to optimize system PATH variable"; exception = $_ }
         return -1
     }
 }

@@ -40,10 +40,7 @@ function Install-UserScripts {
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Failed to clone user scripts repository"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to clone user scripts repository"; exception = $_ }
 
         return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone user scripts repository, try again!') }
     }

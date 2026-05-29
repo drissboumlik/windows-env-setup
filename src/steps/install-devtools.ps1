@@ -37,10 +37,7 @@ function Install-Git {
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Git failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Git failed to install"; exception = $_ }
 
         $message = Set-Error-Message -message 'Git failed to install, try again!'
         return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
@@ -58,10 +55,7 @@ function Install-Nvm {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "NVM: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - NVM failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - NVM failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'NVM failed to install, try again!') }
     }
 }
@@ -73,10 +67,7 @@ function Install-Redis {
 
         return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS was installed successfully') }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - REDIS failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - REDIS failed to install"; exception = $_ }
 
         return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!') }
     }
@@ -92,10 +83,7 @@ function Install-Pvm {
 
         return @{ code = 0; messages = @(Set-Success-Message -message 'PVM was installed successfully') }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - PVM failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - PVM failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'PVM failed to install, try again!') }
     }
 }
@@ -121,10 +109,7 @@ function Install-Composer {
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Composer failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Composer failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'Composer failed to install, try again') }
     }
 }
@@ -150,10 +135,7 @@ function Install-Composer-V1 {
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Composer v1 failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Composer v1 failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'Composer v1 failed to install, try again') }
     }
 }

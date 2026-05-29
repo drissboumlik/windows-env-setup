@@ -26,10 +26,7 @@ function Install-Fonts {
 
         return @{ code = 0; messages = $message; todos = @( Set-Todo-Message -message "Install downloaded font and Add it to cmder settings." ) }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"
-            exception = $_
-        }
+        $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
 
         return @{ code = -1; messages = @(Set-Error-Message -message 'Fonts failed to download, try again!') }
     }

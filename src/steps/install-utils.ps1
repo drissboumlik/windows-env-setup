@@ -10,10 +10,7 @@ function Install-Eza {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "EZA: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - EZA failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - EZA failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'EZA failed to install, try again!') }
     }
 }
@@ -29,10 +26,7 @@ function Install-Delta {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "DELTA: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - DELTA failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - DELTA failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'DELTA failed to install, try again!') }
     }
 }
@@ -48,10 +42,7 @@ function Install-Bat {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "BAT: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - BAT failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - BAT failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'BAT failed to install, try again!') }
     }
 }
@@ -67,10 +58,7 @@ function Install-Fzf {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "FZF: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - FZF failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - FZF failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'FZF failed to install, try again!') }
     }
 }
@@ -86,10 +74,7 @@ function Install-Zoxide {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "ZOXIDE: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - ZOXIDE failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - ZOXIDE failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'ZOXIDE failed to install, try again!') }
     }
 }
@@ -105,10 +90,7 @@ function Install-Tldr {
 
         return @{ code = 0; messages = @(Set-Success-Message -message "TLDR: $($res.message)") }
     } catch {
-        $logged = Log-Data -data @{
-            header = "$($MyInvocation.MyCommand.Name) - TLDR failed to install"
-            exception = $_
-        }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - TLDR failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'TLDR failed to install, try again!') }
     }
 }

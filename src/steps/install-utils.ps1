@@ -2,9 +2,13 @@
 function Install-Eza {
     try {
         Write-Host "`nInstalling EZA (better ls)..."
-        choco install eza -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName eza -chocoName eza
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'EZA was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'EZA failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "EZA: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - EZA failed to install"
@@ -17,9 +21,13 @@ function Install-Eza {
 function Install-Delta {
     try {
         Write-Host "`nInstalling DELTA (better git diff)..."
-        choco install delta -y > $null 2>&1;
+        $res = Ensure-PackageInstalled -exeName delta -chocoName delta
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'DELTA was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'DELTA failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "DELTA: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - DELTA failed to install"
@@ -32,9 +40,13 @@ function Install-Delta {
 function Install-Bat {
     try {
         Write-Host "`nInstalling BAT (better cat)..."
-        choco install bat -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName bat -chocoName bat
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'BAT was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'BAT failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "BAT: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - BAT failed to install"
@@ -47,9 +59,13 @@ function Install-Bat {
 function Install-Fzf {
     try {
         Write-Host "`nInstalling FZF (Fuzzy finder)..."
-        choco install fzf -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName fzf -chocoName fzf
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'FZF was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'FZF failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "FZF: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - FZF failed to install"
@@ -62,9 +78,13 @@ function Install-Fzf {
 function Install-Zoxide {
     try {
         Write-Host "`nInstalling ZOXIDE/Z (better cd)..."
-        choco install zoxide -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName zoxide -chocoName zoxide
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'ZOXIDE was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'ZOXIDE failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "ZOXIDE: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - ZOXIDE failed to install"
@@ -77,9 +97,13 @@ function Install-Zoxide {
 function Install-Tldr {
     try {
         Write-Host "`nInstalling TLDR (simplified man pages)..."
-        choco install tldr -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName tldr -chocoName tldr
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'TLDR was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'TLDR failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "TLDR: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - TLDR failed to install"

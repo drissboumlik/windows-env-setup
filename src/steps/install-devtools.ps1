@@ -2,7 +2,11 @@
 function Install-Git {
     try {
         Write-Host "`nDownloading and installing Git..."
-        choco install git.install -y > $null 2>&1
+        $res = Ensure-PackageInstalled -exeName git -chocoName git.install
+
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install') }
+        }
 
         $messages = @(Set-Success-Message -message 'Git was installed successfully')
 
@@ -45,10 +49,14 @@ function Install-Git {
 
 function Install-Nvm {
     try {
-        Write-Host "`nDownloading and installing NVM..."
-        choco install nvm -y > $null 2>&1
+        Write-Host "`nDownloading and installing NVM..."        
+        $res = Ensure-PackageInstalled -exeName nvm -chocoName nvm
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'NVM was installed successfully') }
+        if ($res.code -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message 'NVM failed to install') }
+        }
+
+        return @{ code = 0; messages = @(Set-Success-Message -message "NVM: $($res.message)") }
     } catch {
         $logged = Log-Data -data @{
             header = "$($MyInvocation.MyCommand.Name) - NVM failed to install"

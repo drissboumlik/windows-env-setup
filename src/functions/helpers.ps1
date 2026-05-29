@@ -228,6 +228,30 @@ function Extract-Zip {
     }
 }
 
+function Ensure-PackageInstalled {
+    param($exeName, $chocoName)
+
+    try {
+        $found = Get-Command $exeName -ErrorAction SilentlyContinue
+        if ($found) {
+            return @{ code = 0; message = "$exeName already available" }
+        }
+
+        choco install $chocoName -y > $null 2>&1
+
+        $found = Get-Command $exeName -ErrorAction SilentlyContinue
+        if ($found) {
+            return @{ code = 0; message = "$chocoName installed" }
+        } else {
+            $logged = Log-Data -data @{ header = "Ensure-PackageInstalled - Failed to install $chocoName"; exception = $null }
+            return @{ code = -1; message = "Failed to install $chocoName" }
+        }
+    } catch {
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $_ }
+        return @{ code = -1; message = "Exception while installing $chocoName" }
+    }
+}
+
 function Prompt-YesOrNoWithDefault {
     param(
         $message = 'Do you want to continue ? (yes/no)',

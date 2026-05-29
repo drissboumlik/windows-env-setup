@@ -49,6 +49,14 @@ function Start-Setup {
         $results += Install-Fzf
         $results += Install-Zoxide
         $results += Install-Tldr
+        $results += Install-Fd
+        $results += Install-Ripgrep
+        $results += Install-Starship
+        $results += Install-Jq
+        $results += Install-Yq
+        $results += Install-Tree
+        $results += Install-Curl
+        $results += Install-Wget
     }
 
     if ($StepsQuestions["FONTS"].Answer -eq "yes") {

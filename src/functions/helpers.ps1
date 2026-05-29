@@ -74,7 +74,7 @@ function Get-User-Answers {
         "PVM/COMPOSER" = @{ Question = "- Download PVM (PHP Version Manager) & Composer ?"; Answer = "no" }
         SCRIPTS = @{ Question = "- Download user scripts ?"; Answer = "no" }
         REDIS = @{ Question = "- Download Redis ?"; Answer = "no" }
-        TOOLS = @{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr) ?"; Answer = "no" }
+        TOOLS = @{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr, Fd, Ripgrep, Starship, Jq, Yq, Tree, Curl, Wget) ?"; Answer = "no" }
         CMDER = @{ Question = "- Download & Configure Cmder ?"; Answer = "no" }
         FONTS = @{ Question = "- Download Nerd Fonts ?"; Answer = "no" }
     }

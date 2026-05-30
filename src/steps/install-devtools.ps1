@@ -52,7 +52,6 @@ function Install-Git {
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Git failed to install"; exception = $_ }
 
-        $message = Set-Error-Message -message 'Git failed to install, try again!'
         return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
     }
 }

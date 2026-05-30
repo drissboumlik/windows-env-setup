@@ -23,12 +23,12 @@ function Install-Fonts {
         }
 
         if ($errors.Count -eq 0) {
-            $message = Set-Success-Message -message 'Fonts downloaded successfully'
+            $messages = Set-Success-Message -message 'Fonts downloaded successfully'
         } else {
-            $message = Set-Error-Message -message ("Fonts downloaded with some issues : `n" + ($errors -join "`n"))
+            $messages = Set-Error-Message -message ("Fonts downloaded with some issues : `n" + ($errors -join "`n"))
         }
 
-        return @{ code = 0; messages = $message; todos = @( Set-Todo-Message -message "Install downloaded font and Add it to cmder settings." ) }
+        return @{ code = 0; messages = $messages; todos = @( Set-Todo-Message -message "Install downloaded font and Add it to cmder settings." ) }
     } catch {
         $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
 

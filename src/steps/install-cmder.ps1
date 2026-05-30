@@ -37,15 +37,15 @@
             }
         }
 
-        $message = @(Set-Success-Message -message 'Cmder was installed successfully')
+        $messages = @(Set-Success-Message -message 'Cmder was installed successfully')
 
         if ($errors.Count -ne 0) {
-            $message += @(Set-Error-Message -message "Cmder was installed but with some issues : `n" + ($errors -join "`n"))
+            $messages += @(Set-Error-Message -message "Cmder was installed but with some issues : `n" + ($errors -join "`n"))
         } else {
-            $message += @(Set-Success-Message -message 'Cmder paths were added to the PATH variable')
+            $messages += @(Set-Success-Message -message 'Cmder paths were added to the PATH variable')
         }
 
-        return @{ code = 0; messages = $message; path = $cmderPath }
+        return @{ code = 0; messages = $messages; path = $cmderPath }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - CMDER failed to install"; exception = $_ }
 

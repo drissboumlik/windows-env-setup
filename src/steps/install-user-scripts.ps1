@@ -3,6 +3,12 @@ function Install-UserScripts {
     param ($downloadPath)
 
     try {
+        $scriptsCommandsPath = "$downloadPath\scripts\src\commands"
+
+        if (Test-Path $scriptsCommandsPath) {
+            return @{ code = 0; messages = @(Set-Success-Message -message 'User scripts are already installed') }
+        }
+
         git clone $USER_SCRIPTS_URL "$downloadPath\scripts" > $null 2>&1
 
         $toolsPath = "$downloadPath\tools\bin"
@@ -19,7 +25,7 @@ function Install-UserScripts {
         }
 
         $errors = @()
-        Get-ChildItem "$downloadPath\scripts\src\commands\*" -Directory | ForEach-Object {
+        Get-ChildItem "$scriptsCommandsPath\*" -Directory | ForEach-Object {
             Get-ChildItem "$($_.FullName)\*.ps1" | ForEach-Object {
                 try {
                     $batFilePath = "$toolsPath\$($_.BaseName).bat"

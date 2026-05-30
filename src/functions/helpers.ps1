@@ -104,8 +104,7 @@ function Install-Chocolatey {
     try {
         Write-Host "`nDownloading and installing Chocolatey..."
 
-        $found = Get-Command 'choco' -ErrorAction SilentlyContinue
-        if ($found) {
+        if (Is-Tool-Installed -name 'choco') {
             return @{ code = 0; messages = @( Set-Success-Message -message 'Chocolatey is already installed' ) }
         }
 
@@ -256,12 +255,11 @@ function Extract-Zip {
 }
 
 function Ensure-PackageInstalled {
-    param($exeName, $chocoName)
+    param($name, $chocoName)
 
     try {
-        $found = Get-Command $exeName -ErrorAction SilentlyContinue
-        if ($found) {
-            return @{ code = 0; message = "$exeName already available" }
+        if (Is-Tool-Installed -name $name) {
+            return @{ code = 0; message = "$name already available" }
         }
         
         if (-not (Is-Admin)) {
@@ -270,9 +268,7 @@ function Ensure-PackageInstalled {
             choco install $chocoName -y > $null 2>&1
         }
 
-
-        $found = Get-Command $exeName -ErrorAction SilentlyContinue
-        if ($found) {
+        if (Is-Tool-Installed -name $name) {
             return @{ code = 0; message = "$chocoName installed" }
         } else {
             $logged = Log-Data -data @{ header = "Ensure-PackageInstalled - Failed to install $chocoName"; exception = $null }

@@ -2,15 +2,29 @@
 function Install-Git {
     try {
         Write-Host "`nDownloading and installing Git..."
-        $res = Ensure-PackageInstalled -exeName git -chocoName git.install
+        $res = Ensure-PackageInstalled -name 'git' -chocoName 'git.install'
 
         if ($res.code -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install') }
         }
+        
+        $gitConfigFile = "$HOME/.gitconfig"
+        $isGitInstalled = ($res.code -eq 0)
+        $configHasLogPretty = $false
+        $configHasDelta = $false
+
+        if ($isGitInstalled -and (Test-Path $gitConfigFile)) {
+            $gitConfig = Get-Content $gitConfigFile -Raw -ErrorAction SilentlyContinue
+            if ($gitConfig -match 'log-pretty\s*=') { $configHasLogPretty = $true }
+            if ($gitConfig -match 'themes\.gitconfig|^\s*\[delta\]' -and $gitConfig -match 'pager\s*=\s*delta') { $configHasDelta = $true }
+        }
+
+        if ($isGitInstalled -and $configHasLogPretty -and $configHasDelta) {
+            return @{ code = 0; messages = @(Set-Success-Message -message 'Git is already installed and configured') }
+        }
 
         $messages = @(Set-Success-Message -message 'Git was installed successfully')
 
-        $gitConfigFile = "~/.gitconfig"
         if (-not (Test-Path $gitConfigFile)) {
             New-Item -Path $gitConfigFile -ItemType "File"
         }
@@ -47,7 +61,7 @@ function Install-Git {
 function Install-Nvm {
     try {
         Write-Host "`nDownloading and installing NVM..."        
-        $res = Ensure-PackageInstalled -exeName nvm -chocoName nvm
+        $res = Ensure-PackageInstalled -name 'nvm' -chocoName 'nvm'
 
         if ($res.code -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message 'NVM failed to install') }
@@ -62,6 +76,10 @@ function Install-Nvm {
 
 function Install-Redis {
     try {
+        if ((Is-Tool-Installed -name 'redis-server') -or (Is-Tool-Installed -name 'redis-cli')) {
+            return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS is already installed') }
+        }
+
         Write-Host "`nDownloading and installing REDIS..."
         choco install redis-64 --version=3.0.503 -y > $null 2>&1
 
@@ -77,6 +95,10 @@ function Install-Pvm {
     param($downloadPath)
 
     try {
+        if (Is-Tool-Installed -name 'pvm') {
+            return @{ code = 0; messages = @(Set-Success-Message -message "PVM is already installed") }
+        }
+
         Write-Host "`nDownloading and installing PVM..."
         $pvmPath = "$downloadPath\env\tools\pvm"
         git clone $PVM_URL $pvmPath > $null 2>&1
@@ -92,6 +114,10 @@ function Install-Composer {
     param($downloadPath)
 
     try {
+        if (Is-Tool-Installed -name 'composer') {
+            return @{ code = 0; messages = @(Set-Success-Message -message 'Composer is already installed') }
+        }
+
         Write-Host "`nDownloading and installing PHP for Composer..."
         & "$downloadPath\env\tools\pvm\pvm.bat" setup > $null 2>&1
         & "$downloadPath\env\tools\pvm\pvm.bat" install latest x64 TS > $null 2>&1
@@ -116,13 +142,18 @@ function Install-Composer {
 
 function Install-Composer-V1 {
     try {
+        $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
+
+        if ((Is-Tool-Installed -name 'composer1') -and (Test-Path "$composerV1Path\composer.phar")) {
+            return @{ code = 0; messages = @(Set-Success-Message -message "Composer v1 is already installed at '$composerV1Path'") }
+        }
+
         $code = Download-File -url $COMPOSER_V1_URL -output "$COMPOSER_FILES_PATH\v1\composer.phar"
         if ($code -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to download v1\composer.phar file') }
         }
 
         # Copy composer version 1 to the composer path
-        $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
         Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
         $messages = @(Set-Success-Message -message 'Composer v1 was installed successfully')
 

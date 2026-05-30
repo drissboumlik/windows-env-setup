@@ -435,6 +435,19 @@ function Set-EnvVar {
     }
 }
 
+function Remove-PathDuplicates {
+    param($path)
+
+    $seen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+    $entries = $Path -split ';' |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Where-Object { $seen.Add($_) }
+
+    return ($entries -join ';')
+}
+
 function Optimize-SystemPath {
 
     try {
@@ -442,6 +455,8 @@ function Optimize-SystemPath {
         if ($null -eq $path) {
             $path = ''
         }
+
+        $path = Remove-PathDuplicates $path
         $oldPath = $path
         $envVars = Get-All-EnvVars
 

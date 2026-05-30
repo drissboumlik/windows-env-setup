@@ -5,10 +5,11 @@ $Global:SETUP_ROOT = (Resolve-Path "$PSScriptRoot\..\..").Path
 # Files used to config different tools
 $Global:CMDER_FILES_PATH = "$SETUP_ROOT\files\cmder"
 $Global:COMPOSER_FILES_PATH = "$SETUP_ROOT\files\composer"
-$Global:COMPOSER_INSTALLATION_PATH = "C:\composer"
 $Global:GIT_FILES_PATH = "$SETUP_ROOT\files\git"
 $Global:FONTS_FILES_PATH = "$SETUP_ROOT\files\fonts"
 $Global:USER_SCRIPTS_FILES_PATH = "$SETUP_ROOT\files\scripts"
+$Global:COMPOSER_INSTALLATION_PATH = "C:\composer"
+$Global:CMDER_INSTALLATION_DIRECTORY_NAME = "Cmder"
 
 # Environment variable
 $Global:ENV_FILE = "$SETUP_ROOT\.env"

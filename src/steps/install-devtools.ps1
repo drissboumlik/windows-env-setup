@@ -81,7 +81,17 @@ function Install-Redis {
         }
 
         Write-Host "`nDownloading and installing REDIS..."
-        choco install redis-64 --version=3.0.503 -y > $null 2>&1
+        
+        if (-not (Is-Admin)) {
+            $code = Run-Command -filePath 'choco' -arguments @('install', 'redis-64', '--version=3.0.503' , '-y')
+        } else {
+            choco install redis-64 --version=3.0.503 -y > $null 2>&1
+        }
+
+        if ((Is-Tool-Not-Installed -name 'redis-server') -and (Is-Tool-Not-Installed -name 'redis-cli')) {
+            $logged = Log-Data -data @{ header = 'Install-Redis - Failed to install REDIS'; exception = $null }
+            return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!') }
+        }
 
         return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS was installed successfully') }
     } catch {
@@ -126,7 +136,16 @@ function Install-Composer {
         $phpPath = Get-ChildItem "$downloadPath\env\tools\pvm\storage\php" -Directory | Select-Object -First 1 | Select-Object -ExpandProperty FullName
         Move-Item -Path "$phpPath\*" -Destination $PHP_INSTALLATION_PATH -Force
         $params = '"/Php:{0}"' -f $PHP_INSTALLATION_PATH
-        choco install composer -y --params $params > $null 2>&1
+        if (-not (Is-Admin)) {
+            $code = Run-Command -filePath 'choco' -arguments @('install', 'composer', '-y', '--params', $params)
+        } else {
+            choco install composer -y --params $params > $null 2>&1
+        }
+        
+        if (Is-Tool-Not-Installed -name 'composer') {
+            $logged = Log-Data -data @{ header = 'Install-Composer - Failed to install Composer'; exception = $null }
+            return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to install Composer') }
+        }
 
         $messages = @(Set-Success-Message -message 'Composer was installed successfully')
 

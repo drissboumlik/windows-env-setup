@@ -243,7 +243,7 @@ function Make-Directory {
         }
 
         $path = $path.Trim()
-        if (-not (Is-Directory-Exists -path $path)) {
+        if (Is-Directory-Not-Exists -path $path) {
             New-Item -ItemType Directory -Path $path -Force | Out-Null
         }
 
@@ -280,12 +280,12 @@ function Ensure-PackageInstalled {
             choco install $chocoName -y > $null 2>&1
         }
 
-        if (Is-Tool-Installed -name $name) {
-            return @{ code = 0; message = "$chocoName installed" }
-        } else {
+        if (Is-Tool-Not-Installed -name $name) {
             $logged = Log-Data -data @{ header = "Ensure-PackageInstalled - Failed to install $chocoName"; exception = $null }
             return @{ code = -1; message = "Failed to install $chocoName" }
         }
+        
+        return @{ code = 0; message = "$chocoName installed" }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $_ }
         return @{ code = -1; message = "Exception while installing $chocoName" }

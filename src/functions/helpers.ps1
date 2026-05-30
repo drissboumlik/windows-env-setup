@@ -203,6 +203,12 @@ function Run-PS-Command {
     return $process.ExitCode
 }
 
+function Is-Tool-Installed {
+    param ($name)
+
+    return [bool](Get-Command $name -ErrorAction SilentlyContinue)
+}
+
 function Is-Directory-Exists {
     param ($path)
 

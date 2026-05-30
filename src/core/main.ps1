@@ -96,7 +96,7 @@ function Follow-Up {
     $customPath = Get-User-Path -readFromEnvFile $true
 
     if ($StepsQuestions["CMDER"].Answer -eq "yes") {
-        $results += Configure-Cmder -downloadPath $customPath
+        $results += Configure-Cmder -cmderPath "$customPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
     }
 
     $WhatWasDoneMessages = @()

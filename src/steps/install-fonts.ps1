@@ -2,6 +2,10 @@
 function Install-Fonts {
     param ($downloadPath)
     try {
+        if (Test-Path -Path "$downloadPath\fonts") {
+            return @{ code = 0; messages = @(Set-Success-Message -message "Fonts are already installed") }
+        }
+
         Write-Host "`nDownloading Fonts..."
         $nfUrls = Get-Content "$SETUP_ROOT\files\fonts\links.txt" | Where-Object { $_ -ne "" }
         $created = Make-Directory -path "$downloadPath\fonts"

@@ -20,7 +20,7 @@ function Install-UserScripts {
         $messages = @()
 
         $updated = Append-To-Env-Variable -entry $toolsPath -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
-        if ($updated -ne 0) {
+        if ($updated.code -ne 0) {
             $messages += Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$toolsPath'"
         }
 

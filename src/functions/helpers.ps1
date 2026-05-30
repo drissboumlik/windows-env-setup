@@ -305,15 +305,15 @@ function Prompt-YesOrNoWithDefault {
 function Append-To-Env-Variable {
     param ( $entry, $targetVariable, $asVarRef = 1 )
 
-    $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
-    return $code
+    $res = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
+    return $res
 }
 
 function Remove-From-Env-Variable {
     param ( $entry, $targetVariable, $asVarRef = 1 )
 
-    $code = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
-    return $code
+    $res = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
+    return $res
 }
 
 function Update-Env-Variable {
@@ -325,29 +325,37 @@ function Update-Env-Variable {
     if ($remove -eq 1) {
         $updated = @($entries | Where-Object { $_ -ne $resolvedEntry })
         if ($updated.Count -eq $entries.Count) {
-            Write-Warning "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed."
-            return -1
+            return @{ code = -1; message = "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed." }
         }
     } else {
         if ($resolvedEntry -in $entries) {
-            Write-Warning "Entry '$entry' already exists in $TargetVariable — skipping."
-            return -1
+            return @{ code = -1; message = "Entry '$resolvedEntry' already exists in $TargetVariable — skipping." }
         }
         $updated = @($entries + $resolvedEntry)
     }
     $newValue = $updated -join ";"
     $output = Set-EnvVar -name $targetVariable -value $newValue
 
-    return $output
+    if ($output -eq 0) {
+        if ($remove -eq 1) {
+            $message = "Entry '$resolvedEntry' removed from $TargetVariable"
+        } else {
+            $message = "Entry '$resolvedEntry' added to $TargetVariable"
+        }
+    } else {
+        $message = "Failed to update $TargetVariable with entry '$resolvedEntry'"
+    }
+
+    return @{ code = $output; message = $message }
 }
 
 function Update-Path-Env-Variable {
     param( $entry, $asVarRef = 1, $remove = 0 )
 
-    $code = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
+    $res = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
     $optimized = Optimize-SystemPath
 
-    return $code
+    return $res
 }
 
 function Print-Messages {

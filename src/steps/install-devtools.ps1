@@ -158,7 +158,7 @@ function Install-Composer-V1 {
         $messages = @(Set-Success-Message -message 'Composer v1 was installed successfully')
 
         $updated = Append-To-Env-Variable -entry $composerV1Path -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
-        if ($updated -eq 0) {
+        if ($updated.code -eq 0) {
             $messages += Set-Success-Message -message "Updated '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"
         } else {
             $messages += Set-Error-Message -message "Failed to update '$DEV_TOOLS_ENV_VAR' environment variable with '$composerV1Path'"

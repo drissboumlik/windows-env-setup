@@ -410,7 +410,7 @@ function Get-EnvVar-ByName {
         $value = [System.Environment]::GetEnvironmentVariable($name, [System.EnvironmentVariableTarget]::Machine)
         
         if ($optimized -eq $true) {
-            $value = Get-Optimized-Env -targetVariable $value
+            $value = Get-Optimized-Env -name $name -value $value
         }
         
         return $value
@@ -492,7 +492,7 @@ function Optimize-SystemPath {
 }
 
 function Get-Optimized-Env {
-    param($targetVariable)
+    param($name, $value)
     
     $envVars = Get-All-EnvVars
 
@@ -500,17 +500,15 @@ function Get-Optimized-Env {
         $envName = $_
         $envValue = $envVars[$envName]
 
-        if (
-            ($null -ne $envValue) -and
-            ($targetVariable.ToLower() -like "*$($envValue.ToLower())*") -and
-            -not($envValue -match '(?i)\\Windows') -and
-            -not($envValue -match '(?i)\\System32')
-        ) {
-            $envValue = [regex]::Escape($envValue.TrimEnd(';'))
-            $pattern = "(?i)(?<=^|;){0}(?=;|$)" -f $envValue
-            $targetVariable = [regex]::Replace($targetVariable, $pattern, "%$envName%")
-        }
+        if ($name.ToLower() -eq $envName.ToLower()) { return }
+        if (-not $envValue) { return }
+        if ($value.ToLower() -notlike "*$($envValue.ToLower())*") { return }
+        if ($envValue -match '(?i)\\Windows|\\System32') { return }
+
+        $envValue = [regex]::Escape($envValue.TrimEnd(';'))
+        $pattern = "(?i)(?<=^|;){0}(?=;|$)" -f $envValue
+        $value = [regex]::Replace($value, $pattern, "%$envName%")
     }
     
-    return $targetVariable
+    return $value
 }

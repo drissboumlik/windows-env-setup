@@ -1,13 +1,14 @@
 ﻿function Setup-Cmder {
     param ( $downloadPath )
     try {
-        Write-Host "`nDownloading & Extracting Cmder..."
-        
-        if (Is-Tool-Installed -name 'cmder') {
+        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+
+        if ((Is-Tool-Installed -name 'cmder') -or (Is-Tool-Installed -name "$cmderPath\cmder")) {
             return @{ code = -1; messages = @(Set-Success-Message -message "Cmder is already installed") }
         }
 
-        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+        Write-Host "`nDownloading & Extracting Cmder..."
+
         $code = Download-File -url $CMDER_URL -output "$downloadPath\Cmder.zip"
         if ($code -ne 0) {
             throw "Failed to download Cmder"

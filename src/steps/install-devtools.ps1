@@ -1,7 +1,6 @@
 ﻿
 function Install-Git {
     try {
-        Write-Host "`nDownloading and installing Git..."
         $res = Ensure-PackageInstalled -name 'git' -chocoName 'git.install'
 
         if ($res.code -ne 0) {
@@ -60,7 +59,6 @@ function Install-Git {
 
 function Install-Nvm {
     try {
-        Write-Host "`nDownloading and installing NVM..."        
         $res = Ensure-PackageInstalled -name 'nvm' -chocoName 'nvm'
 
         if ($res.code -ne 0) {

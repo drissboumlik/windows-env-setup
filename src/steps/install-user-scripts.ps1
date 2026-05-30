@@ -9,6 +9,8 @@ function Install-UserScripts {
             return @{ code = 0; messages = @(Set-Success-Message -message 'User scripts are already installed') }
         }
 
+        Write-Host "`nDownloading & Extracting User Scripts..."
+
         git clone $USER_SCRIPTS_URL "$downloadPath\scripts" > $null 2>&1
 
         $toolsPath = "$downloadPath\tools\bin"

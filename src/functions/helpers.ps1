@@ -102,11 +102,11 @@ function Get-Followup-Answers {
 
 function Install-Chocolatey {
     try {
-        Write-Host "`nDownloading and installing Chocolatey..."
-
         if (Is-Tool-Installed -name 'choco') {
             return @{ code = 0; messages = @( Set-Success-Message -message 'Chocolatey is already installed' ) }
         }
+
+        Write-Host "`nDownloading and installing Chocolatey..."
 
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
 
@@ -273,6 +273,8 @@ function Ensure-PackageInstalled {
         if (Is-Tool-Installed -name $name) {
             return @{ code = 0; message = "$name already available" }
         }
+        
+        Write-Host "`nInstalling $name..."
         
         if (-not (Is-Admin)) {
             $code = Run-Command -filePath 'choco' -arguments @('install', $chocoName, '-y')

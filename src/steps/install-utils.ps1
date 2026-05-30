@@ -1,7 +1,6 @@
 ﻿
 function Install-Eza {
     try {
-        Write-Host "`nInstalling EZA (better ls)..."
         $res = Ensure-PackageInstalled -name 'eza' -chocoName 'eza'
 
         if ($res.code -ne 0) {
@@ -17,7 +16,6 @@ function Install-Eza {
 
 function Install-Delta {
     try {
-        Write-Host "`nInstalling DELTA (better git diff)..."
         $res = Ensure-PackageInstalled -name 'delta' -chocoName 'delta'
 
         if ($res.code -ne 0) {
@@ -33,7 +31,6 @@ function Install-Delta {
 
 function Install-Bat {
     try {
-        Write-Host "`nInstalling BAT (better cat)..."
         $res = Ensure-PackageInstalled -name 'bat' -chocoName 'bat'
 
         if ($res.code -ne 0) {
@@ -49,7 +46,6 @@ function Install-Bat {
 
 function Install-Fzf {
     try {
-        Write-Host "`nInstalling FZF (Fuzzy finder)..."
         $res = Ensure-PackageInstalled -name 'fzf' -chocoName 'fzf'
 
         if ($res.code -ne 0) {
@@ -65,7 +61,6 @@ function Install-Fzf {
 
 function Install-Zoxide {
     try {
-        Write-Host "`nInstalling ZOXIDE/Z (better cd)..."
         $res = Ensure-PackageInstalled -name 'zoxide' -chocoName 'zoxide'
 
         if ($res.code -ne 0) {
@@ -81,7 +76,6 @@ function Install-Zoxide {
 
 function Install-Tldr {
     try {
-        Write-Host "`nInstalling TLDR (simplified man pages)..."
         $res = Ensure-PackageInstalled -name 'tldr' -chocoName 'tldr'
 
         if ($res.code -ne 0) {
@@ -97,7 +91,6 @@ function Install-Tldr {
 
 function Install-Fd {
     try {
-        Write-Host "`nInstalling FD (faster find)..."
         $res = Ensure-PackageInstalled -name 'fd' -chocoName 'fd'
         
         if ($res.code -ne 0) {
@@ -113,7 +106,6 @@ function Install-Fd {
 
 function Install-Ripgrep {
     try {
-        Write-Host "`nInstalling RIPGREP (faster grep)..."
         $res = Ensure-PackageInstalled -name 'rg' -chocoName 'ripgrep'
 
         if ($res.code -ne 0) {
@@ -129,7 +121,6 @@ function Install-Ripgrep {
 
 function Install-Starship {
     try {
-        Write-Host "`nInstalling STARSHIP (cross-shell prompt)..."
         $res = Ensure-PackageInstalled -name 'starship' -chocoName 'starship'
 
         if ($res.code -ne 0) {
@@ -145,7 +136,6 @@ function Install-Starship {
 
 function Install-Jq {
     try {
-        Write-Host "`nInstalling JQ (JSON processor)..."
         $res = Ensure-PackageInstalled -name 'jq' -chocoName 'jq'
 
         if ($res.code -ne 0) {
@@ -161,7 +151,6 @@ function Install-Jq {
 
 function Install-Yq {
     try {
-        Write-Host "`nInstalling YQ (YAML processor)..."
         $res = Ensure-PackageInstalled -name 'yq' -chocoName 'yq'
         
         if ($res.code -ne 0) {
@@ -177,7 +166,6 @@ function Install-Yq {
 
 function Install-Tree {
     try {
-        Write-Host "`nInstalling TREE..."
         $res = Ensure-PackageInstalled -name 'tree' -chocoName 'tree'
         
         if ($res.code -ne 0) {
@@ -193,7 +181,6 @@ function Install-Tree {
 
 function Install-Curl {
     try {
-        Write-Host "`nInstalling CURL..."
         $res = Ensure-PackageInstalled -name 'curl' -chocoName 'curl'
         
         if ($res.code -ne 0) {
@@ -209,7 +196,6 @@ function Install-Curl {
 
 function Install-Wget {
     try {
-        Write-Host "`nInstalling WGET..."
         $res = Ensure-PackageInstalled -name 'wget' -chocoName 'wget'
         
         if ($res.code -ne 0) {

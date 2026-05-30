@@ -4,7 +4,7 @@
         Write-Host "`nDownloading & Extracting Cmder..."
         
         if (Is-Tool-Installed -name 'cmder') {
-            return @{ code = 0; messages = @(Set-Success-Message -message "Cmder is already installed") }
+            return @{ code = -1; messages = @(Set-Success-Message -message "Cmder is already installed") }
         }
 
         $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"

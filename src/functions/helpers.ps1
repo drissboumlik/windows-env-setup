@@ -353,7 +353,9 @@ function Update-Path-Env-Variable {
     param( $entry, $asVarRef = 1, $remove = 0 )
 
     $res = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
-    $optimized = Optimize-SystemPath
+    if ($res.code -eq 0) {
+        $optimized = Optimize-SystemPath
+    }
 
     return $res
 }

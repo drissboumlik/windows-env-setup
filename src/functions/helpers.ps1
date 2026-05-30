@@ -208,6 +208,12 @@ function Is-Tool-Installed {
     return [bool](Get-Command $name -ErrorAction SilentlyContinue)
 }
 
+function Is-Tool-Not-Installed {
+    param ($name)
+    
+    return (-not (Is-Tool-Installed -name $name))
+}
+
 function Is-Directory-Exists {
     param ($path)
 
@@ -220,6 +226,12 @@ function Is-Directory-Exists {
     } catch {
         return $false
     }
+}
+
+function Is-Directory-Not-Exists {
+    param ($path)
+    
+    return (-not (Is-Directory-Exists -path $path))
 }
 
 function Make-Directory {

@@ -100,24 +100,6 @@ function Get-Followup-Answers {
     return $StepsQuestions
 }
 
-function Install-Chocolatey {
-    try {
-        if (Is-Tool-Installed -name 'choco') {
-            return @{ code = 0; messages = @( Set-Success-Message -message 'Chocolatey is already installed' ) }
-        }
-
-        Write-Host "`nDownloading and installing Chocolatey..."
-
-        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("")) | Out-Null
-
-        return @{ code = 0; messages = @(Set-Success-Message -message "Chocolatey installed successfully") }
-    } catch {
-        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message "Chocolatey failed or is already installed, try again") }
-    }
-}
-
 function Set-Todo-Message {
     param ( $message )
 
@@ -210,7 +192,7 @@ function Is-Tool-Installed {
 
 function Is-Tool-Not-Installed {
     param ($name)
-    
+
     return (-not (Is-Tool-Installed -name $name))
 }
 
@@ -230,7 +212,7 @@ function Is-Directory-Exists {
 
 function Is-Directory-Not-Exists {
     param ($path)
-    
+
     return (-not (Is-Directory-Exists -path $path))
 }
 
@@ -273,9 +255,9 @@ function Ensure-PackageInstalled {
         if (Is-Tool-Installed -name $name) {
             return @{ code = 0; message = "$name already available" }
         }
-        
+
         Write-Host "`nInstalling $name..."
-        
+
         if (-not (Is-Admin)) {
             $code = Run-Command -filePath 'choco' -arguments @('install', $chocoName, '-y')
         } else {
@@ -286,7 +268,7 @@ function Ensure-PackageInstalled {
             $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $null }
             return @{ code = -1; message = "Failed to install $chocoName" }
         }
-        
+
         return @{ code = 0; message = "$chocoName installed" }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $_ }
@@ -422,11 +404,11 @@ function Get-EnvVar-ByName {
         }
         $name = $name.Trim()
         $value = [System.Environment]::GetEnvironmentVariable($name, [System.EnvironmentVariableTarget]::Machine)
-        
+
         if ($optimized -eq $true) {
             $value = Get-Optimized-Env -name $name -value $value
         }
-        
+
         return $value
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to get environment variable '$name'"; exception = $_ }
@@ -507,7 +489,7 @@ function Optimize-SystemPath {
 
 function Get-Optimized-Env {
     param($name, $value)
-    
+
     $envVars = Get-All-EnvVars
 
     $envVars.Keys | ForEach-Object {
@@ -523,6 +505,6 @@ function Get-Optimized-Env {
         $pattern = "(?i)(?<=^|;){0}(?=;|$)" -f $envValue
         $value = [regex]::Replace($value, $pattern, "%$envName%")
     }
-    
+
     return $value
 }

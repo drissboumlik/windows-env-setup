@@ -86,7 +86,7 @@ function Install-Redis {
         }
 
         if ((Is-Tool-Not-Installed -name 'redis-server') -and (Is-Tool-Not-Installed -name 'redis-cli')) {
-            $logged = Log-Data -data @{ header = 'Install-Redis - Failed to install REDIS'; exception = $null }
+            $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - REDIS failed to install"; exception = $null }
             return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!') }
         }
 
@@ -140,7 +140,7 @@ function Install-Composer {
         }
         
         if (Is-Tool-Not-Installed -name 'composer') {
-            $logged = Log-Data -data @{ header = 'Install-Composer - Failed to install Composer'; exception = $null }
+            $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install Composer"; exception = $null }
             return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to install Composer') }
         }
 

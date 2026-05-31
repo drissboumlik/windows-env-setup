@@ -283,7 +283,7 @@ function Ensure-PackageInstalled {
         }
 
         if (Is-Tool-Not-Installed -name $name) {
-            $logged = Log-Data -data @{ header = "Ensure-PackageInstalled - Failed to install $chocoName"; exception = $null }
+            $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $null }
             return @{ code = -1; message = "Failed to install $chocoName" }
         }
         

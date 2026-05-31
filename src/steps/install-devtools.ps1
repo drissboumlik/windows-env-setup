@@ -24,6 +24,21 @@ function Install-Git {
 
         $messages = @(Set-Success-Message -message 'Git was installed successfully')
 
+        $res = Configure-Git -gitConfigFile $gitConfigFile
+        $messages += $res.messages
+        
+        return @{ code = 0; messages = $messages }
+    } catch {
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Git failed to install"; exception = $_ }
+
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
+    }
+}
+
+function Configure-Git {
+    param ($gitConfigFile)
+    
+    try {
         if (-not (Test-Path $gitConfigFile)) {
             New-Item -Path $gitConfigFile -ItemType "File"
         }
@@ -40,7 +55,7 @@ function Install-Git {
         git config --global alias.log-pretty2 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%cs) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.log-pretty3 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%ch) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.nah "!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f"
-        $messages += Set-Success-Message -message 'Git aliases are set'
+        $messages = Set-Success-Message -message 'Git aliases are set'
 
         $deltaGitConfig = Get-Content "$GIT_FILES_PATH\delta-git-config.txt" -Raw
         Copy-Item -Path "$GIT_FILES_PATH\themes.gitconfig" -Destination "~/themes.gitconfig"
@@ -50,9 +65,8 @@ function Install-Git {
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Git failed to install"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to configure Git"; exception = $_ }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to configure Git, try again!') }
     }
 }
 

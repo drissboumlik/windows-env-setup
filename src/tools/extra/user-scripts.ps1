@@ -31,7 +31,7 @@ function Install-UserScripts {
             Get-ChildItem "$($_.FullName)\*.ps1" | ForEach-Object {
                 try {
                     $batFilePath = "$toolsPath\$($_.BaseName).bat"
-                    $batContent = Get-Content "$USER_SCRIPTS_FILES_PATH\skeleton.bat" -Raw
+                    $batContent = Get-Content $USER_SCRIPT_BAT_SKELETON_PATH -Raw
                     $batContent = $batContent -replace '__FILE_TARGET__', $_.FullName
                     Set-Content -Path $batFilePath -Value $batContent | Out-Null
                 } catch {

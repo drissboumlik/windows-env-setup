@@ -46,13 +46,13 @@ function Install-Composer-V1 {
             return @{ code = 0; messages = @(Set-Success-Message -message "Composer v1 is already installed at '$composerV1Path'") }
         }
 
-        $code = Download-File -url $COMPOSER_V1_URL -output "$COMPOSER_FILES_PATH\v1\composer.phar"
+        $code = Download-File -url $COMPOSER_V1_URL -output "$COMPOSER_V1_FILES_PATH\composer.phar"
         if ($code -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to download v1\composer.phar file') }
         }
 
         # Copy composer version 1 to the composer path
-        Copy-Item -Path "$COMPOSER_FILES_PATH\v1" -Destination $composerV1Path -Recurse
+        Copy-Item -Path $COMPOSER_V1_FILES_PATH -Destination $composerV1Path -Recurse
         $messages = @(Set-Success-Message -message 'Composer v1 was installed successfully')
 
         $updated = Append-To-Env-Variable -entry $composerV1Path -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0

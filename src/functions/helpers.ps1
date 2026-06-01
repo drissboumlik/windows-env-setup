@@ -460,7 +460,7 @@ function Optimize-SystemPath {
             $path = ''
         }
 
-        $path = Remove-PathDuplicates $path
+        $path = Remove-PathDuplicates -path $path
         $oldPath = $path
 
         $output = 0

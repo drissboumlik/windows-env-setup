@@ -1,37 +1,74 @@
 ﻿
 function Install-Fonts {
     param ($downloadPath)
+
     try {
-        if (Test-Path -Path "$downloadPath\fonts") {
-            return @{ code = 0; messages = @(Set-Success-Message -message "Fonts are already installed") }
+        $links = Get-Content -Path $FONTS_LINKS_FILE_PATH -ErrorAction Stop | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+        if (-not $links -or $links.Count -eq 0) {
+            throw "No font links were found."
         }
 
         Write-Host "`nDownloading Fonts..."
-        $nfUrls = Get-Content "$SETUP_ROOT\files\fonts\links.txt" | Where-Object { $_ -ne "" }
-        $created = Make-Directory -path "$downloadPath\fonts"
-        if ($created -ne 0) {
-            throw "Failed to create fonts directory at '$downloadPath\fonts'"
-        }
 
-        $errors = @()
-        foreach ($url in $nfUrls) {
-            $fileName = Split-Path $url -Leaf
-            $code = Download-File -url $url -output "$downloadPath\fonts\$fileName"
-            if ($code -ne 0) {
-                $errors += "Failed to download font from '$url'"
+        $allMessages = @()
+        foreach ($link in $links) {
+            $res = Install-Font -downloadPath $downloadPath -url $link
+            if ($res.code -ne 0) {
+                throw "Failed to process '$link'"
             }
+            if ($res.messages) { $allMessages += $res.messages }
         }
 
-        if ($errors.Count -eq 0) {
-            $messages = Set-Success-Message -message 'Fonts downloaded successfully'
-        } else {
-            $messages = Set-Error-Message -message ("Fonts downloaded with some issues : `n" + ($errors -join "`n"))
-        }
-
-        return @{ code = 0; messages = $messages; todos = @( Set-Todo-Message -message "Install downloaded font and Add it to cmder settings." ) }
+        return @{ code = 0; messages = $allMessages; todos = @( Set-Todo-Message -message "Install downloaded fonts from '$FONTS_INSTALLATION_DIRECTORY_NAME'." ) }
     } catch {
         $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
 
         return @{ code = -1; messages = @(Set-Error-Message -message 'Fonts failed to download, try again!') }
+    }
+}
+
+function Install-Font {
+    param ($downloadPath, $url)
+
+    try {
+        if (-not $url) { throw "No URL provided to Install-Font." }
+
+        $fontsDir = "$downloadPath\$FONTS_INSTALLATION_DIRECTORY_NAME"
+        $created = Make-Directory -path $fontsDir
+        if ($created -ne 0) {
+            throw "Failed to create fonts directory at '$fontsDir'"
+        }
+
+        $zipName = Split-Path -Path $url -Leaf
+        $zipPath = "$fontsDir\$zipName"
+        if (Test-Path -Path $zipPath) { Remove-Item -Path $zipPath -Force -ErrorAction SilentlyContinue }
+
+        $downloadCode = Download-File -url $url -output $zipPath
+        if ($downloadCode -ne 0) { throw "Failed to download fonts archive from '$url'" }
+
+        $extractPath = "$fontsDir\" + ([IO.Path]::GetFileNameWithoutExtension($zipName))
+        if (Test-Path -Path $extractPath) { Remove-Item -Path $extractPath -Recurse -Force -ErrorAction SilentlyContinue }
+
+        $created = Make-Directory -path $extractPath
+        if ($created -ne 0) { throw "Failed to create extraction directory at '$extractPath'" }
+
+        $extractCode = Extract-Zip -zipPath $zipPath -extractPath $extractPath
+        if ($extractCode -ne 0) { throw "Failed to extract zip archive '$zipPath'" }
+
+        Remove-Item -Path $zipPath
+
+        $fontFiles = Get-ChildItem -Path $extractPath -Include *.ttf, *.otf -Recurse -File -ErrorAction SilentlyContinue
+        if (-not $fontFiles -or $fontFiles.Count -eq 0) {
+            throw "No font files were found in the downloaded archive '$zipName'."
+        }
+
+        return @{
+            code = 0;
+            messages = @(Set-Success-Message -message "Fonts downloaded and extracted successfully at '$extractPath'");
+        }
+    } catch {
+        $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Font failed to download/extract"; exception = $_ }
+
+        return @{ code = -1; messages = @(Set-Error-Message -message "Fonts failed for '$url'") }
     }
 }

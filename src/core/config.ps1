@@ -7,9 +7,11 @@ $Global:CMDER_FILES_PATH = "$SETUP_ROOT\assets\cmder"
 $Global:COMPOSER_FILES_PATH = "$SETUP_ROOT\assets\composer"
 $Global:GIT_FILES_PATH = "$SETUP_ROOT\assets\git"
 $Global:FONTS_FILES_PATH = "$SETUP_ROOT\assets\fonts"
+$Global:FONTS_LINKS_FILE_PATH = "$FONTS_FILES_PATH\links.txt"
 $Global:USER_SCRIPTS_FILES_PATH = "$SETUP_ROOT\assets\scripts"
 $Global:COMPOSER_INSTALLATION_PATH = "C:\composer"
 $Global:CMDER_INSTALLATION_DIRECTORY_NAME = "Cmder"
+$Global:FONTS_INSTALLATION_DIRECTORY_NAME = 'fonts'
 
 # Environment variable
 $Global:ENV_FILE = "$SETUP_ROOT\.env"

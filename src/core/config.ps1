@@ -11,15 +11,15 @@ $Global:FONTS_FILES_PATH = "$SETUP_ROOT\assets\fonts"
 $Global:FONTS_LINKS_FILE_PATH = "$FONTS_FILES_PATH\links.txt"
 $Global:USER_SCRIPTS_FILES_PATH = "$SETUP_ROOT\assets\scripts"
 $Global:USER_SCRIPT_BAT_SKELETON_PATH = "$USER_SCRIPTS_FILES_PATH\skeleton.bat"
-$Global:COMPOSER_INSTALLATION_PATH = "C:\composer"
-$Global:CMDER_INSTALLATION_DIRECTORY_NAME = "Cmder"
+$Global:COMPOSER_INSTALLATION_PATH = 'C:\composer'
+$Global:CMDER_INSTALLATION_DIRECTORY_NAME = 'Cmder'
 $Global:FONTS_INSTALLATION_DIRECTORY_NAME = 'fonts'
 
 # Environment variable
 $Global:ENV_FILE = "$SETUP_ROOT\.env"
-$Global:USER_ENV_PATH = "C:\DevEnv"
-$Global:PHP_INSTALLATION_PATH = "C:\php"
-$Global:DEV_TOOLS_ENV_VAR = "DEV_TOOLS_PATH"
+$Global:USER_ENV_PATH = 'C:\DevEnv'
+$Global:PHP_INSTALLATION_PATH = 'C:\php'
+$Global:DEV_TOOLS_ENV_VAR = 'DEV_TOOLS_PATH'
 
 # Storage paths
 $Global:STORAGE_PATH = "$SETUP_ROOT\storage"

@@ -46,7 +46,7 @@ function Setup-Cmder {
             $messages += @(Set-Success-Message -message 'Cmder paths were added to the PATH variable')
         }
 
-        return @{ code = 0; messages = $messages; path = $cmderPath }
+        return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - CMDER failed to install"; exception = $_ }
 
@@ -92,7 +92,8 @@ function Install-Cmder {
 
         $result.todos += Set-Info-Message -message "Start cmder and Run 'clink update' to check for any updates"
 
-        $flexpromptInstaller = Install-Flexprompt -downloadPath $downloadPath -cmderPath $result.path
+        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+        $flexpromptInstaller = Install-Flexprompt -downloadPath $downloadPath -cmderPath $cmderPath
         $result.messages += $flexpromptInstaller.messages
         if ($flexpromptInstaller.todos) {
             $result.todos += $flexpromptInstaller.todos

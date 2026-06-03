@@ -15,6 +15,7 @@ $Global:USER_SCRIPT_BAT_SKELETON_PATH = "$USER_SCRIPTS_FILES_PATH\skeleton.bat"
 # Installation paths
 $Global:CMDER_INSTALLATION_DIRECTORY_NAME = 'Cmder'
 $Global:FONTS_INSTALLATION_DIRECTORY_NAME = 'fonts'
+$Global:TOOLS_INSTALLATION_DIRECTORY_PATH = 'tools\bin'
 $Global:COMPOSER_V1_INSTALLATION_DIRECTORY_PATH = 'tools\composer\v1'
 
 # Environment variable

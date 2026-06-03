@@ -34,7 +34,7 @@ function Setup-Cmder {
         $cmderStuff | ForEach-Object {
             $res = Append-To-Env-Variable -entry $_ -targetVariable $DEV_TOOLS_ENV_VAR -asVarRef 0
             if ($res.code -ne 0) {
-                $errors += "Failed to add '$_' to the PATH variable"
+                $errors += $res.messages
             }
         }
 

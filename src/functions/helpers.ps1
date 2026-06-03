@@ -231,6 +231,12 @@ function Is-Directory-Empty {
     }
 }
 
+function Is-Directory-Not-Empty {
+    param ($path)
+    
+    return (-not (Is-Directory-Empty -path $path))
+}
+
 function Remove-Directory {
     param ($path)
 

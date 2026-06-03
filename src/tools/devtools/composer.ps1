@@ -26,12 +26,7 @@ function Install-Composer {
             return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to install Composer') }
         }
 
-        $messages = @(Set-Success-Message -message 'Composer was installed successfully')
-
-        $result = Install-Composer-V1
-        $messages += $result.messages
-
-        return @{ code = 0; messages = $messages }
+        return @{ code = 0; messages = @(Set-Success-Message -message 'Composer was installed successfully') }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Composer failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'Composer failed to install, try again') }
@@ -39,6 +34,8 @@ function Install-Composer {
 }
 
 function Install-Composer-V1 {
+    param ($downloadPath)
+
     try {
         $composerV1Path = "$downloadPath\$COMPOSER_V1_INSTALLATION_DIRECTORY_PATH"
 

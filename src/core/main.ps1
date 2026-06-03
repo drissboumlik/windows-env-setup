@@ -36,6 +36,7 @@ function Start-Setup {
     if ($StepsQuestions["PVM/COMPOSER"].Answer -eq "yes") {
         $results += Install-Pvm -downloadPath $customPath
         $results += Install-Composer -downloadPath $customPath
+        $results += Install-Composer-V1 -downloadPath $customPath
     }
 
     if ($StepsQuestions["SCRIPTS"].Answer -eq "yes") {

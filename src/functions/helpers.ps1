@@ -216,6 +216,34 @@ function Is-Directory-Not-Exists {
     return (-not (Is-Directory-Exists -path $path))
 }
 
+function Is-Directory-Empty {
+    param ($path)
+
+    try {
+        if (Is-Directory-Not-Exists -path $path) {
+            return $false
+        }
+        
+        $directoryInfo = Get-ChildItem -Path $path -Force | Measure-Object
+        return ($directoryInfo.Count -eq 0)
+    } catch {
+        return $false
+    }
+}
+
+function Remove-Directory {
+    param ($path)
+
+    try {
+        if (Is-Directory-Exists -path $path) {
+            Remove-Item -Path $path -Recurse -Force
+        }
+        return 0
+    } catch {
+        return -1
+    }
+}
+
 function Make-Directory {
     param ( $path )
 

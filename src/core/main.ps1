@@ -74,6 +74,11 @@ function Start-Setup {
         }
     }
 
+    if (Is-Directory-Empty -path $customPath) {
+        Remove-Directory -path $customPath
+        $WhatWasDoneMessages += Set-Warning-Message -message "The directory '$customPath' was removed as it was empty."
+    }
+
     $res = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
     if ($res.code -eq 0) {
         $WhatToDoNext += Set-Todo-Message -message "Make sure to restart your terminal for the changes to take effect."

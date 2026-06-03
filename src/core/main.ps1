@@ -21,29 +21,29 @@ function Start-Setup {
 
     $results += Install-Chocolatey
 
-    if ($StepsQuestions["GIT"].Answer -eq "yes") {
+    if ($StepsQuestions['GIT'].Answer -eq 'yes') {
         $results += Install-Git
     }
 
-    if ($StepsQuestions["NVM"].Answer -eq "yes") {
+    if ($StepsQuestions['NVM'].Answer -eq 'yes') {
         $results += Install-Nvm
     }
 
-    if ($StepsQuestions["REDIS"].Answer -eq "yes") {
+    if ($StepsQuestions['REDIS'].Answer -eq 'yes') {
         $results += Install-Redis
     }
 
-    if ($StepsQuestions["PVM/COMPOSER"].Answer -eq "yes") {
+    if ($StepsQuestions['PVM/COMPOSER'].Answer -eq 'yes') {
         $results += Install-Pvm -downloadPath $customPath
         $results += Install-Composer -downloadPath $customPath
         $results += Install-Composer-V1 -downloadPath $customPath
     }
 
-    if ($StepsQuestions["SCRIPTS"].Answer -eq "yes") {
+    if ($StepsQuestions['SCRIPTS'].Answer -eq 'yes') {
         $results += Install-UserScripts -downloadPath $customPath
     }
 
-    if ($StepsQuestions["TOOLS"].Answer -eq "yes") {
+    if ($StepsQuestions['TOOLS'].Answer -eq 'yes') {
         $results += Install-Eza
         $results += Install-Delta
         $results += Install-Bat
@@ -60,11 +60,11 @@ function Start-Setup {
         $results += Install-Wget
     }
 
-    if ($StepsQuestions["FONTS"].Answer -eq "yes") {
+    if ($StepsQuestions['FONTS'].Answer -eq 'yes') {
         $results += Install-Fonts -downloadPath $customPath
     }
 
-    if ($StepsQuestions["CMDER"].Answer -eq "yes") {
+    if ($StepsQuestions['CMDER'].Answer -eq 'yes') {
         $results += Install-Cmder -downloadPath $customPath
     }
 
@@ -82,7 +82,7 @@ function Start-Setup {
 
     $res = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
     if ($res.code -eq 0) {
-        $WhatToDoNext += Set-Info-Message -message "Make sure to restart your terminal for the changes to take effect."
+        $WhatToDoNext += Set-Info-Message -message 'Make sure to restart your terminal for the changes to take effect.'
         $WhatWasDoneMessages += $res.messages
     } else {
         $WhatWasDoneMessages += $res.messages
@@ -102,7 +102,7 @@ function Follow-Up {
 
     $customPath = Get-User-Path -readFromEnvFile $true
 
-    if ($StepsQuestions["CMDER"].Answer -eq "yes") {
+    if ($StepsQuestions['CMDER'].Answer -eq 'yes') {
         $results += Configure-Cmder -cmderPath "$customPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
     }
 

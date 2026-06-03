@@ -4,7 +4,7 @@ function Install-Pvm {
 
     try {
         if (Is-Tool-Installed -name 'pvm') {
-            return @{ code = 0; messages = @(Set-Warning-Message -message "PVM is already installed") }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'PVM is already installed') }
         }
 
         Write-Host "`nDownloading and installing PVM..."

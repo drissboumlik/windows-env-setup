@@ -40,25 +40,25 @@ function Configure-Git {
 
     try {
         if (-not (Test-Path $gitConfigFile)) {
-            New-Item -Path $gitConfigFile -ItemType "File"
+            New-Item -Path $gitConfigFile -ItemType 'File'
         }
 
-        $backupFile = "~/.gitconfig.bak"
+        $backupFile = '~/.gitconfig.bak'
         if (Test-Path $backupFile) {
             Copy-Item -Path $backupFile -Destination $gitConfigFile
         } else {
             Copy-Item -Path $gitConfigFile -Destination $backupFile
         }
 
-        git config --global alias.alias "! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /"
+        git config --global alias.alias '! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /'
         git config --global alias.log-pretty  "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.log-pretty2 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%cs) %C(bold blue)<%an>%Creset' --abbrev-commit"
         git config --global alias.log-pretty3 "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cgreen(%ch) %C(bold blue)<%an>%Creset' --abbrev-commit"
-        git config --global alias.nah "!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f"
+        git config --global alias.nah '!f(){ git reset --hard; git clean -df; if [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ]; then git rebase --abort; fi; }; f'
         $messages = Set-Success-Message -message 'Git aliases are set'
 
         $deltaGitConfig = Get-Content "$GIT_FILES_PATH\delta-git-config.txt" -Raw
-        Copy-Item -Path "$GIT_FILES_PATH\themes.gitconfig" -Destination "~/themes.gitconfig"
+        Copy-Item -Path "$GIT_FILES_PATH\themes.gitconfig" -Destination '~/themes.gitconfig'
         Add-Content -Path $gitConfigFile -Value $deltaGitConfig | Out-Null
 
         $messages += Set-Success-Message -message 'Delta was added to ~/.gitconfig successfully'

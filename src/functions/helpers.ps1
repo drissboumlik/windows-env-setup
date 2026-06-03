@@ -6,7 +6,7 @@ function Get-User-Path {
 
     if ($readFromEnvFile -and (Test-Path $ENV_FILE)) {
         Get-Content $ENV_FILE | ForEach-Object {
-            if ($_ -match "^USER_ENV_PATH=(.*)$") {
+            if ($_ -match '^USER_ENV_PATH=(.*)$') {
                 $path = $matches[1].Trim()
             }
         }
@@ -19,7 +19,7 @@ function Get-User-Path {
     }
 
     if ($path -and $path -notmatch '^[A-Za-z]:\\.+') {
-        Write-Host "Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools)."
+        Write-Host 'Invalid path. Please provide a valid absolute path (e.g., C:\dev-tools).'
         return $null
     }
 
@@ -69,19 +69,19 @@ function Log-Data {
 function Get-User-Answers {
 
     $StepsQuestions = [ordered]@{
-        GIT = @{ Question = "- Download Git ?"; Answer = "no" }
-        NVM = @{ Question = "- Download NVM (Node Version Manager) ?"; Answer = "no" }
-        "PVM/COMPOSER" = @{ Question = "- Download PVM (PHP Version Manager) & Composer ?"; Answer = "no" }
-        SCRIPTS = @{ Question = "- Download user scripts ?"; Answer = "no" }
-        REDIS = @{ Question = "- Download Redis ?"; Answer = "no" }
-        TOOLS = @{ Question = "- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr, Fd, Ripgrep, Starship, Jq, Yq, Tree, Curl, Wget) ?"; Answer = "no" }
-        CMDER = @{ Question = "- Download & Configure Cmder ?"; Answer = "no" }
-        FONTS = @{ Question = "- Download Nerd Fonts ?"; Answer = "no" }
+        GIT = @{ Question = '- Download Git ?'; Answer = 'no' }
+        NVM = @{ Question = '- Download NVM (Node Version Manager) ?'; Answer = 'no' }
+        'PVM/COMPOSER' = @{ Question = '- Download PVM (PHP Version Manager) & Composer ?'; Answer = 'no' }
+        SCRIPTS = @{ Question = '- Download user scripts ?'; Answer = 'no' }
+        REDIS = @{ Question = '- Download Redis ?'; Answer = 'no' }
+        TOOLS = @{ Question = '- Download TOOLS (eza, delta, bat, fzf, zoxide, tldr, Fd, Ripgrep, Starship, Jq, Yq, Tree, Curl, Wget) ?'; Answer = 'no' }
+        CMDER = @{ Question = '- Download & Configure Cmder ?'; Answer = 'no' }
+        FONTS = @{ Question = '- Download Nerd Fonts ?'; Answer = 'no' }
     }
 
     foreach ($key in $StepsQuestions.Keys) {
         $q = $StepsQuestions[$key]
-        $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption "yes"
+        $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption 'yes'
     }
 
     return $StepsQuestions
@@ -89,12 +89,12 @@ function Get-User-Answers {
 
 function Get-Followup-Answers {
     $StepsQuestions = [ordered]@{
-        CMDER = @{ Question = "- Did you already start cmder ?"; Answer = "no" }
+        CMDER = @{ Question = '- Did you already start cmder ?'; Answer = 'no' }
     }
 
     foreach ($key in $StepsQuestions.Keys) {
         $q = $StepsQuestions[$key]
-        $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption "no"
+        $q.Answer = Prompt-YesOrNoWithDefault -message $q.Question -defaultOption 'no'
     }
 
     return $StepsQuestions
@@ -107,8 +107,8 @@ function Set-Info-Message {
 
     return @{
         Message = $message
-        ForegroundColor = "White"
-        BackgroundColor = "Black"
+        ForegroundColor = 'White'
+        BackgroundColor = 'Black'
     }
 }
 
@@ -119,8 +119,8 @@ function Set-Success-Message {
 
     return @{
         Message = $message
-        ForegroundColor = "DarkGreen"
-        BackgroundColor = "Black"
+        ForegroundColor = 'DarkGreen'
+        BackgroundColor = 'Black'
     }
 }
 
@@ -131,8 +131,8 @@ function Set-Warning-Message {
 
     return @{
         Message = $message
-        ForegroundColor = "Yellow"
-        BackgroundColor = "Black"
+        ForegroundColor = 'Yellow'
+        BackgroundColor = 'Black'
     }
 }
 
@@ -146,8 +146,8 @@ function Set-Error-Message {
 
     return @{
         Message = $message
-        ForegroundColor = "DarkYellow"
-        BackgroundColor = "Black"
+        ForegroundColor = 'DarkYellow'
+        BackgroundColor = 'Black'
     }
 }
 
@@ -182,11 +182,11 @@ function Run-PS-Command {
     param($command)
 
     $process = Start-Process `
-        -FilePath "powershell.exe" `
+        -FilePath 'powershell.exe' `
         -ArgumentList @(
-            "-NoProfile",
-            "-ExecutionPolicy", "Bypass",
-            "-Command", $command
+            '-NoProfile',
+            '-ExecutionPolicy', 'Bypass',
+            '-Command', $command
         ) `
         -Verb RunAs `
         -PassThru `
@@ -325,19 +325,19 @@ function Ensure-PackageInstalled {
 function Prompt-YesOrNoWithDefault {
     param(
         $message = 'Do you want to continue ? (yes/no)',
-        [ValidateSet("yes", "no")]
-        $defaultOption = "no"
+        [ValidateSet('yes', 'no')]
+        $defaultOption = 'no'
     )
 
     $promptMessage = "$message (Default: $defaultOption)"
     $response = Read-Host $promptMessage
 
-    if ($response -eq "" -or $response -eq $defaultOption) {
+    if ($response -eq '' -or $response -eq $defaultOption) {
         return $defaultOption
-    } elseif ($response -eq "yes" -or $response -eq "y") {
-        return "yes"
-    } elseif ($response -eq "no" -or $response -eq "n") {
-        return "no"
+    } elseif ($response -eq 'yes' -or $response -eq 'y') {
+        return 'yes'
+    } elseif ($response -eq 'no' -or $response -eq 'n') {
+        return 'no'
     } else {
         Write-Host "Invalid input. Please enter 'yes' or 'no'."
         return Prompt-YesOrNoWithDefault -message $message -defaultOption $defaultOption
@@ -363,7 +363,7 @@ function Update-Env-Variable {
 
     $resolvedEntry = if ($asVarRef -eq 1) { "%$entry%" } else { $entry }
     $currentValue = Get-EnvVar-ByName -name $targetVariable -optimized $true
-    $entries = @($currentValue -split ";" | Where-Object { $_ -ne "" })
+    $entries = @($currentValue -split ';' | Where-Object { $_ -ne '' })
     if ($remove -eq 1) {
         $updated = @($entries | Where-Object { $_ -ne $resolvedEntry })
         if ($updated.Count -eq $entries.Count) {
@@ -375,7 +375,7 @@ function Update-Env-Variable {
         }
         $updated = @($entries + $resolvedEntry)
     }
-    $newValue = $updated -join ";"
+    $newValue = $updated -join ';'
     $output = Set-EnvVar -name $targetVariable -value $newValue
 
     if ($output -eq 0) {
@@ -394,7 +394,7 @@ function Update-Env-Variable {
 function Update-Path-Env-Variable {
     param( $entry, $asVarRef = 1, $remove = 0 )
 
-    $res = Update-Env-Variable -entry $entry -targetVariable "PATH" -asVarRef $asVarRef -remove $remove
+    $res = Update-Env-Variable -entry $entry -targetVariable 'PATH' -asVarRef $asVarRef -remove $remove
     if ($res.code -eq 0) {
         $optimized = Optimize-SystemPath
     }
@@ -407,14 +407,14 @@ function Print-Messages {
 
     if ($messages.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
-        Write-Host "# Results :"
+        Write-Host '# Results :'
         foreach ($msg in $messages) {
             Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
     }
     if ($todos.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
-        Write-Host "# Todos :"
+        Write-Host '# Todos :'
         foreach ($msg in $todos) {
             Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
@@ -501,7 +501,7 @@ function Remove-PathDuplicates {
 function Optimize-SystemPath {
 
     try {
-        $path = Get-EnvVar-ByName -name "Path" -optimized $true
+        $path = Get-EnvVar-ByName -name 'Path' -optimized $true
         if ($null -eq $path) {
             $path = ''
         }
@@ -520,7 +520,7 @@ function Optimize-SystemPath {
                 Write-Host "`nOriginal Path saved to '$PATH_VAR_BACKUP_PATH'"
             }
 
-            $output = Set-EnvVar -name "Path" -value $path
+            $output = Set-EnvVar -name 'Path' -value $path
             if ($output -eq 0) {
                 Write-Host "`nPath optimized successfully" -ForegroundColor DarkGreen
             }

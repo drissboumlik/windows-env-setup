@@ -5,7 +5,7 @@ function Install-Fonts {
     try {
         $links = Get-Content -Path $FONTS_LINKS_FILE_PATH -ErrorAction Stop | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
         if (-not $links -or $links.Count -eq 0) {
-            throw "No font links were found."
+            throw 'No font links were found.'
         }
 
         Write-Host "`nDownloading Fonts..."
@@ -34,7 +34,7 @@ function Install-Font {
     param ($fontsDir, $url)
 
     try {
-        if (-not $url) { throw "No URL provided to Install-Font." }
+        if (-not $url) { throw 'No URL provided to Install-Font.' }
 
         $zipName = Split-Path -Path $url -Leaf
         $zipPath = "$fontsDir\$zipName"

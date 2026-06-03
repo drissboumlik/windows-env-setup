@@ -5,19 +5,19 @@ function Setup-Cmder {
         $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
 
         if ((Is-Tool-Installed -name 'cmder') -or (Is-Tool-Installed -name "$cmderPath\cmder")) {
-            return @{ code = -1; messages = @(Set-Warning-Message -message "Cmder is already installed") }
+            return @{ code = -1; messages = @(Set-Warning-Message -message 'Cmder is already installed') }
         }
 
         Write-Host "`nDownloading & Extracting Cmder..."
 
         $code = Download-File -url $CMDER_URL -output "$downloadPath\Cmder.zip"
         if ($code -ne 0) {
-            throw "Failed to download Cmder"
+            throw 'Failed to download Cmder'
         }
 
         $code = Extract-Zip -zipPath "$downloadPath\Cmder.zip" -extractPath $cmderPath
         if ($code -ne 0) {
-            throw "Failed to extract Cmder"
+            throw 'Failed to extract Cmder'
         }
         Remove-Item -Path "$downloadPath\Cmder.zip"
 
@@ -27,7 +27,7 @@ function Setup-Cmder {
             "$cmderPath\vendor\bin",
             "$cmderPath\vendor",
             "$cmderPath\bin",
-            "$cmderPath"
+            $cmderPath
         )
 
         $errors = @()
@@ -67,7 +67,7 @@ function Install-Flexprompt {
 
         return @{
             code = 0;
-            messages = @(Set-Success-Message -message "Flexprompt installed successfully");
+            messages = @(Set-Success-Message -message 'Flexprompt installed successfully');
             todos = @(Set-Info-Message -message "Start cmder and Run 'flexprompt configure' to customize the prompt style.")
         }
     } catch {
@@ -116,7 +116,7 @@ function Customize-Cmder {
         if (Test-Path "$cmderPath\vendor\conemu-maximus5\ConEmu.xml") {
             Copy-Item -Path "$cmderPath\vendor\conemu-maximus5\ConEmu.xml" -Destination "$cmderPath\vendor\conemu-maximus5\ConEmu.xml.bak"
         } else {
-            Write-Warning "No ConEmu.xml found to backup."
+            Write-Warning 'No ConEmu.xml found to backup.'
         }
         Copy-Item -Path "$CMDER_FILES_PATH\ConEmu.xml" -Destination "$cmderPath\vendor\conemu-maximus5\ConEmu.xml"
 
@@ -125,14 +125,14 @@ function Customize-Cmder {
         if (Test-Path "$cmderPath\config\user_aliases.cmd") {
             Copy-Item -Path "$cmderPath\config\user_aliases.cmd" -Destination "$cmderPath\config\user_aliases.cmd.bak"
         } else {
-            Write-Warning "No user_aliases.cmd found to backup."
+            Write-Warning 'No user_aliases.cmd found to backup.'
         }
         Get-Content -Path "$CMDER_FILES_PATH\user_aliases.cmd" | Add-Content -Path "$cmderPath\config\user_aliases.cmd"
 
         if (Test-Path "$cmderPath\config\user_profile.cmd") {
             Copy-Item -Path "$cmderPath\config\user_profile.cmd" -Destination "$cmderPath\config\user_profile.cmd.bak"
         } else {
-            Write-Warning "No user_profile.cmd found to backup."
+            Write-Warning 'No user_profile.cmd found to backup.'
         }
 
         Get-Content -Path "$CMDER_FILES_PATH\user_profile.cmd" | Add-Content -Path "$cmderPath\config\user_profile.cmd"

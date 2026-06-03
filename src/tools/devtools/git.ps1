@@ -19,7 +19,7 @@ function Install-Git {
         }
 
         if ($isGitInstalled -and $configHasLogPretty -and $configHasDelta) {
-            return @{ code = 0; messages = @(Set-Success-Message -message 'Git is already installed and configured') }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'Git is already installed and configured') }
         }
 
         $messages = @(Set-Success-Message -message 'Git was installed successfully')

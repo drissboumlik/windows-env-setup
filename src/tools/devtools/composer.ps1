@@ -4,7 +4,7 @@ function Install-Composer {
 
     try {
         if (Is-Tool-Installed -name 'composer') {
-            return @{ code = 0; messages = @(Set-Success-Message -message 'Composer is already installed') }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'Composer is already installed') }
         }
 
         Write-Host "`nDownloading and installing PHP for Composer..."
@@ -43,7 +43,7 @@ function Install-Composer-V1 {
         $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
 
         if ((Is-Tool-Installed -name 'composer1') -and (Test-Path "$composerV1Path\composer.phar")) {
-            return @{ code = 0; messages = @(Set-Success-Message -message "Composer v1 is already installed at '$composerV1Path'") }
+            return @{ code = 0; messages = @(Set-Warning-Message -message "Composer v1 is already installed at '$composerV1Path'") }
         }
 
         $code = Download-File -url $COMPOSER_V1_URL -output "$COMPOSER_V1_FILES_PATH\composer.phar"

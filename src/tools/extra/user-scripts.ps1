@@ -6,7 +6,7 @@ function Install-UserScripts {
         $scriptsCommandsPath = "$downloadPath\scripts\src\commands"
 
         if (Test-Path $scriptsCommandsPath) {
-            return @{ code = 0; messages = @(Set-Success-Message -message 'User scripts are already installed') }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'User scripts are already installed') }
         }
 
         Write-Host "`nDownloading & Extracting User Scripts..."

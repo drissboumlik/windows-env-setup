@@ -2,7 +2,7 @@
 function Install-Chocolatey {
     try {
         if (Is-Tool-Installed -name 'choco') {
-            return @{ code = 0; messages = @( Set-Success-Message -message 'Chocolatey is already installed' ) }
+            return @{ code = 0; messages = @( Set-Warning-Message -message 'Chocolatey is already installed' ) }
         }
 
         Write-Host "`nDownloading and installing Chocolatey..."

@@ -2,7 +2,7 @@
 function Install-Redis {
     try {
         if ((Is-Tool-Installed -name 'redis-server') -or (Is-Tool-Installed -name 'redis-cli')) {
-            return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS is already installed') }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'REDIS is already installed') }
         }
 
         Write-Host "`nDownloading and installing REDIS..."

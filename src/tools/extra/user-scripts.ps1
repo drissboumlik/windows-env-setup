@@ -16,7 +16,7 @@ function Install-UserScripts {
         $toolsPath = "$downloadPath\$TOOLS_INSTALLATION_DIRECTORY_PATH"
         $created = Make-Directory -path $toolsPath
         if ($created -ne 0) {
-            throw "Failed to create tools/bin directory at $toolsPath"
+            throw "Failed to create tools/bin directory at '$toolsPath'"
         }
 
         $messages = @()

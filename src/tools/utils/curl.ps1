@@ -7,7 +7,7 @@ function Install-Curl {
             return @{ code = -1; messages = @(Set-Error-Message -message 'curl failed to install') }
         }
 
-        return @{ code = 0; messages = @(Set-Success-Message -message "CURL: $($res.message)") }
+        return @{ code = 0; messages = $res.messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - curl failed"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'curl failed to install, try again!') }

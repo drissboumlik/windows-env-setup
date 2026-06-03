@@ -7,7 +7,7 @@ function Install-Delta {
             return @{ code = -1; messages = @(Set-Error-Message -message 'DELTA failed to install') }
         }
 
-        return @{ code = 0; messages = @(Set-Success-Message -message "DELTA: $($res.message)") }
+        return @{ code = 0; messages = $res.messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - DELTA failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'DELTA failed to install, try again!') }

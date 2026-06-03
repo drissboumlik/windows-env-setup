@@ -82,9 +82,9 @@ function Start-Setup {
     $res = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
     if ($res.code -eq 0) {
         $WhatToDoNext += Set-Todo-Message -message "Make sure to restart your terminal for the changes to take effect."
-        $WhatWasDoneMessages += Set-Success-Message -message $res.message
+        $WhatWasDoneMessages += $res.messages
     } else {
-        $WhatWasDoneMessages += Set-Error-Message -message $res.message
+        $WhatWasDoneMessages += $res.messages
     }
 
     $WhatToDoNext += Set-Todo-Message -message "Run ./followup.bat when you're done for additional cmder configuration"

@@ -299,7 +299,7 @@ function Ensure-PackageInstalled {
 
     try {
         if (Is-Tool-Installed -name $name) {
-            return @{ code = 0; message = "$name already available" }
+            return @{ code = 0; messages = @(Set-Warning-Message -message "$name already available") }
         }
 
         Write-Host "`nInstalling $name..."
@@ -312,13 +312,13 @@ function Ensure-PackageInstalled {
 
         if (Is-Tool-Not-Installed -name $name) {
             $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $null }
-            return @{ code = -1; message = "Failed to install $chocoName" }
+            return @{ code = -1; messages = @(Set-Error-Message -message "Failed to install $chocoName") }
         }
 
-        return @{ code = 0; message = "$chocoName installed" }
+        return @{ code = 0; messages = @(Set-Success-Message -message "$($chocoName.ToUpper()) installed") }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $_ }
-        return @{ code = -1; message = "Exception while installing $chocoName" }
+        return @{ code = -1; messages = @(Set-Error-Message -message "Exception while installing $chocoName") }
     }
 }
 
@@ -367,11 +367,11 @@ function Update-Env-Variable {
     if ($remove -eq 1) {
         $updated = @($entries | Where-Object { $_ -ne $resolvedEntry })
         if ($updated.Count -eq $entries.Count) {
-            return @{ code = -1; message = "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed." }
+            return @{ code = -1; messages = @(Set-Warning-Message -message "Entry '$resolvedEntry' not found in $TargetVariable — nothing removed.") }
         }
     } else {
         if ($resolvedEntry -in $entries) {
-            return @{ code = -1; message = "Entry '$resolvedEntry' already exists in $TargetVariable — skipping." }
+            return @{ code = -1; messages = @(Set-Warning-Message -message "Entry '$resolvedEntry' already exists in $TargetVariable — skipping.") }
         }
         $updated = @($entries + $resolvedEntry)
     }
@@ -380,15 +380,15 @@ function Update-Env-Variable {
 
     if ($output -eq 0) {
         if ($remove -eq 1) {
-            $message = "Entry '$resolvedEntry' removed from $TargetVariable"
+            $messages = @(Set-Success-Message -message "Entry '$resolvedEntry' removed from $TargetVariable")
         } else {
-            $message = "Entry '$resolvedEntry' added to $TargetVariable"
+            $messages = @(Set-Success-Message -message "Entry '$resolvedEntry' added to $TargetVariable")
         }
     } else {
-        $message = "Failed to update $TargetVariable with entry '$resolvedEntry'"
+        $messages = @(Set-Error-Message -message "Failed to update $TargetVariable with entry '$resolvedEntry'")
     }
 
-    return @{ code = $output; message = $message }
+    return @{ code = $output; messages = $messages }
 }
 
 function Update-Path-Env-Variable {

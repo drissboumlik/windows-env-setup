@@ -7,7 +7,7 @@ function Install-Fd {
             return @{ code = -1; messages = @(Set-Error-Message -message 'fd failed to install') }
         }
 
-        return @{ code = 0; messages = @(Set-Success-Message -message "FD: $($res.message)") }
+        return @{ code = 0; messages = $res.messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - fd failed"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'fd failed to install, try again!') }

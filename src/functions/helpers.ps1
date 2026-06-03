@@ -124,6 +124,18 @@ function Set-Success-Message {
     }
 }
 
+function Set-Warning-Message {
+    param ( $message )
+
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :|" }) -join "`n"
+
+    return @{
+        Message = $message
+        ForegroundColor = "Yellow"
+        BackgroundColor = "Black"
+    }
+}
+
 function Set-Error-Message {
     param ( $message, $exceptionMessage = $null )
 

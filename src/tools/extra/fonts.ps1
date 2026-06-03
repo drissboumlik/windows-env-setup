@@ -22,7 +22,7 @@ function Install-Fonts {
             if ($res.messages) { $allMessages += $res.messages }
         }
 
-        return @{ code = 0; messages = $allMessages; todos = @( Set-Todo-Message -message "Install downloaded fonts from '$FONTS_INSTALLATION_DIRECTORY_NAME'." ) }
+        return @{ code = 0; messages = $allMessages; todos = @( Set-Todo-Message -message "Install downloaded fonts from '$fontsDir'." ) }
     } catch {
         $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
 

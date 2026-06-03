@@ -10,12 +10,15 @@ function Install-Fonts {
 
         Write-Host "`nDownloading Fonts..."
 
+        $fontsDir = "$downloadPath\$FONTS_INSTALLATION_DIRECTORY_NAME"
+        $created = Make-Directory -path $fontsDir
+        if ($created -ne 0) {
+            return @{ code = -1; messages = @(Set-Error-Message -message "Failed to create fonts directory at '$fontsDir'") }
+        }
+
         $allMessages = @()
         foreach ($link in $links) {
-            $res = Install-Font -downloadPath $downloadPath -url $link
-            if ($res.code -ne 0) {
-                throw "Failed to process '$link'"
-            }
+            $res = Install-Font -fontsDir $fontsDir -url $link
             if ($res.messages) { $allMessages += $res.messages }
         }
 
@@ -28,25 +31,24 @@ function Install-Fonts {
 }
 
 function Install-Font {
-    param ($downloadPath, $url)
+    param ($fontsDir, $url)
 
     try {
         if (-not $url) { throw "No URL provided to Install-Font." }
 
-        $fontsDir = "$downloadPath\$FONTS_INSTALLATION_DIRECTORY_NAME"
-        $created = Make-Directory -path $fontsDir
-        if ($created -ne 0) {
-            throw "Failed to create fonts directory at '$fontsDir'"
-        }
-
         $zipName = Split-Path -Path $url -Leaf
         $zipPath = "$fontsDir\$zipName"
+        $extractPath = "$fontsDir\" + ([IO.Path]::GetFileNameWithoutExtension($zipName))
+        
+        if (Is-Directory-Not-Empty -path $extractPath) {
+            return @{ code = -1; messages = @(Set-Warning-Message -message "The extraction directory '$extractPath' already exists and is not empty. Please remove it before proceeding.") }
+        }
+
         if (Test-Path -Path $zipPath) { Remove-Item -Path $zipPath -Force -ErrorAction SilentlyContinue }
 
         $downloadCode = Download-File -url $url -output $zipPath
         if ($downloadCode -ne 0) { throw "Failed to download fonts archive from '$url'" }
 
-        $extractPath = "$fontsDir\" + ([IO.Path]::GetFileNameWithoutExtension($zipName))
         if (Test-Path -Path $extractPath) { Remove-Item -Path $extractPath -Recurse -Force -ErrorAction SilentlyContinue }
 
         $created = Make-Directory -path $extractPath

@@ -40,7 +40,7 @@ function Install-Composer {
 
 function Install-Composer-V1 {
     try {
-        $composerV1Path = "$COMPOSER_INSTALLATION_PATH\v1"
+        $composerV1Path = "$downloadPath\$COMPOSER_V1_INSTALLATION_DIRECTORY_PATH"
 
         if ((Is-Tool-Installed -name 'composer1') -and (Test-Path "$composerV1Path\composer.phar")) {
             return @{ code = 0; messages = @(Set-Warning-Message -message "Composer v1 is already installed at '$composerV1Path'") }

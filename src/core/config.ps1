@@ -11,9 +11,11 @@ $Global:FONTS_FILES_PATH = "$SETUP_ROOT\assets\fonts"
 $Global:FONTS_LINKS_FILE_PATH = "$FONTS_FILES_PATH\links.txt"
 $Global:USER_SCRIPTS_FILES_PATH = "$SETUP_ROOT\assets\scripts"
 $Global:USER_SCRIPT_BAT_SKELETON_PATH = "$USER_SCRIPTS_FILES_PATH\skeleton.bat"
-$Global:COMPOSER_INSTALLATION_PATH = 'C:\composer'
+
+# Installation paths
 $Global:CMDER_INSTALLATION_DIRECTORY_NAME = 'Cmder'
 $Global:FONTS_INSTALLATION_DIRECTORY_NAME = 'fonts'
+$Global:COMPOSER_V1_INSTALLATION_DIRECTORY_PATH = 'tools\composer\v1'
 
 # Environment variable
 $Global:ENV_FILE = "$SETUP_ROOT\.env"

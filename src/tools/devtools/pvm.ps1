@@ -1,4 +1,4 @@
-
+﻿
 function Install-Pvm {
     param($downloadPath)
 
@@ -8,10 +8,14 @@ function Install-Pvm {
         }
 
         Write-Host "`nDownloading and installing PVM..."
-        $pvmPath = "$downloadPath\env\tools\pvm"
+        $pvmPath = "$downloadPath\$PVM_INSTALLATION_DIRECTORY_NAME"
         git clone $PVM_URL $pvmPath > $null 2>&1
 
-        return @{ code = 0; messages = @(Set-Success-Message -message 'PVM was installed successfully') }
+        return @{
+            code = 0;
+            messages = @(Set-Success-Message -message 'PVM was installed successfully');
+            todos = @(Set-Info-Message -message "cd into '$pvmPath' and run 'pvm setup' command")
+        }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - PVM failed to install"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'PVM failed to install, try again!') }

@@ -11,7 +11,7 @@ function Get-User-Path {
             }
         }
     } else {
-        $path = Read-Host "Where would you like to download the tools? (default: $USER_ENV_PATH)"
+        $path = Read-Host "`nWhere would you like to download the tools? (default: $USER_ENV_PATH)"
     }
 
     if ([string]::IsNullOrWhiteSpace($path)) {

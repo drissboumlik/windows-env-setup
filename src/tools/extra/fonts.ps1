@@ -22,7 +22,7 @@ function Install-Fonts {
             if ($res.messages) { $allMessages += $res.messages }
         }
 
-        return @{ code = 0; messages = $allMessages; todos = @( Set-Todo-Message -message "Install downloaded fonts from '$fontsDir'." ) }
+        return @{ code = 0; messages = $allMessages; todos = @( Set-Info-Message -message "Install downloaded fonts from '$fontsDir'." ) }
     } catch {
         $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
 
@@ -39,7 +39,7 @@ function Install-Font {
         $zipName = Split-Path -Path $url -Leaf
         $zipPath = "$fontsDir\$zipName"
         $extractPath = "$fontsDir\" + ([IO.Path]::GetFileNameWithoutExtension($zipName))
-        
+
         if (Is-Directory-Not-Empty -path $extractPath) {
             return @{ code = -1; messages = @(Set-Warning-Message -message "The extraction directory '$extractPath' already exists and is not empty. Please remove it before proceeding.") }
         }

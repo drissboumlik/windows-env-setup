@@ -68,7 +68,7 @@ function Install-Flexprompt {
         return @{
             code = 0;
             messages = @(Set-Success-Message -message "Flexprompt installed successfully");
-            todos = @(Set-Todo-Message -message "Start cmder and Run 'flexprompt configure' to customize the prompt style.")
+            todos = @(Set-Info-Message -message "Start cmder and Run 'flexprompt configure' to customize the prompt style.")
         }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - FlexPrompt failed to install"; exception = $_ }
@@ -90,7 +90,7 @@ function Install-Cmder {
             $result['todos'] = @()
         }
 
-        $result.todos += Set-Todo-Message -message "Start cmder and Run 'clink update' to check for any updates"
+        $result.todos += Set-Info-Message -message "Start cmder and Run 'clink update' to check for any updates"
 
         $flexpromptInstaller = Install-Flexprompt -downloadPath $downloadPath -cmderPath $result.path
         $result.messages += $flexpromptInstaller.messages

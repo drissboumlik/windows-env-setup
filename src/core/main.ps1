@@ -15,7 +15,7 @@ function Start-Setup {
 
     $WhatWasDoneMessages = @()
     $WhatToDoNext = @()
-    $WhatToDoNext += Set-Todo-Message -message "Your dev path is '$customPath'"
+    $WhatToDoNext += Set-Info-Message -message "Your dev path is '$customPath'"
 
     $results = @()
 
@@ -81,13 +81,13 @@ function Start-Setup {
 
     $res = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
     if ($res.code -eq 0) {
-        $WhatToDoNext += Set-Todo-Message -message "Make sure to restart your terminal for the changes to take effect."
+        $WhatToDoNext += Set-Info-Message -message "Make sure to restart your terminal for the changes to take effect."
         $WhatWasDoneMessages += $res.messages
     } else {
         $WhatWasDoneMessages += $res.messages
     }
 
-    $WhatToDoNext += Set-Todo-Message -message "Run ./followup.bat when you're done for additional cmder configuration"
+    $WhatToDoNext += Set-Info-Message -message "Run ./followup.bat when you're done for additional cmder configuration"
 
     Print-Messages -messages $WhatWasDoneMessages -todos $WhatToDoNext
 

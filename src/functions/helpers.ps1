@@ -100,7 +100,7 @@ function Get-Followup-Answers {
     return $StepsQuestions
 }
 
-function Set-Todo-Message {
+function Set-Info-Message {
     param ( $message )
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
@@ -235,7 +235,7 @@ function Is-Directory-Empty {
         if (Is-Directory-Not-Exists -path $path) {
             return $false
         }
-        
+
         $directoryInfo = Get-ChildItem -Path $path -Force | Measure-Object
         return ($directoryInfo.Count -eq 0)
     } catch {
@@ -245,7 +245,7 @@ function Is-Directory-Empty {
 
 function Is-Directory-Not-Empty {
     param ($path)
-    
+
     return (-not (Is-Directory-Empty -path $path))
 }
 

@@ -52,7 +52,6 @@ function Start-Setup {
         $results += Install-Tldr
         $results += Install-Fd
         $results += Install-Ripgrep
-        $results += Install-Starship
         $results += Install-Jq
         $results += Install-Yq
         $results += Install-Tree

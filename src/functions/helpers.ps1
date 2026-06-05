@@ -30,6 +30,32 @@ function Get-User-Path {
     return $path
 }
 
+function Get-EnvFileValue {
+    param($key)
+
+    if ([string]::IsNullOrWhiteSpace($key) -or -not (Test-Path -Path $ENV_FILE)) {
+        return $null
+    }
+
+    $pattern = '^(?i)\s*' + [regex]::Escape($key) + '\s*=\s*(.*)$'
+
+    foreach ($line in Get-Content -Path $ENV_FILE -ErrorAction SilentlyContinue) {
+        if ($line -match '^[\s#]*$') {
+            continue
+        }
+
+        if ($line -match $pattern) {
+            $value = $matches[1].Trim()
+            if ($value -match '^(?:"|")(.*)(?:"|")$') {
+                $value = $matches[1]
+            }
+            return $value
+        }
+    }
+
+    return $null
+}
+
 function Restore-Or-BackupFile {
     param ($filePath)
 

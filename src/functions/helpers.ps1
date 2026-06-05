@@ -39,7 +39,7 @@ function Get-User-Path {
 }
 
 function Get-EnvFileValue {
-    param($key)
+    param ($key)
 
     if ([string]::IsNullOrWhiteSpace($key) -or -not (Test-Path -Path $ENV_FILE)) {
         return $null
@@ -101,7 +101,7 @@ function Log-Data {
 }
 
 function Set-Info-Message {
-    param ( $message )
+    param ($message)
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
@@ -113,7 +113,7 @@ function Set-Info-Message {
 }
 
 function Set-Success-Message {
-    param ( $message )
+    param ($message)
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
@@ -125,7 +125,7 @@ function Set-Success-Message {
 }
 
 function Set-Warning-Message {
-    param ( $message )
+    param ($message)
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
@@ -137,7 +137,7 @@ function Set-Warning-Message {
 }
 
 function Set-Error-Message {
-    param ( $message, $exceptionMessage = $null )
+    param ($message, $exceptionMessage = $null)
 
     $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
     if ($exceptionMessage) {
@@ -152,7 +152,7 @@ function Set-Error-Message {
 }
 
 function Download-File {
-    param ( $url, $output )
+    param ($url, $output)
 
     try {
         Invoke-WebRequest -Uri $url -OutFile $output
@@ -165,7 +165,7 @@ function Download-File {
 }
 
 function Run-Command {
-    param($filePath, $arguments)
+    param ($filePath, $arguments)
 
     $process = Start-Process `
         -FilePath $filePath `
@@ -179,7 +179,7 @@ function Run-Command {
 }
 
 function Run-PS-Command {
-    param($command)
+    param ($command)
 
     $process = Start-Process `
         -FilePath 'powershell.exe' `
@@ -263,7 +263,7 @@ function Remove-Directory {
 }
 
 function Make-Directory {
-    param ( $path )
+    param ($path)
 
     try {
         if ([string]::IsNullOrWhiteSpace($path)) {
@@ -282,7 +282,7 @@ function Make-Directory {
 }
 
 function Extract-Zip {
-    param ( $zipPath, $extractPath )
+    param ($zipPath, $extractPath)
     try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $extractPath)
@@ -295,7 +295,7 @@ function Extract-Zip {
 }
 
 function Ensure-PackageInstalled {
-    param($name, $chocoName)
+    param ($name, $chocoName)
 
     try {
         if (Is-Tool-Installed -name $name) {
@@ -323,7 +323,7 @@ function Ensure-PackageInstalled {
 }
 
 function Prompt-YesOrNoWithDefault {
-    param(
+    param (
         $message = 'Do you want to continue ? (yes/no)',
         [ValidateSet('yes', 'no')]
         $defaultOption = 'no'
@@ -345,21 +345,21 @@ function Prompt-YesOrNoWithDefault {
 }
 
 function Append-To-Env-Variable {
-    param ( $entry, $targetVariable, $asVarRef = 1 )
+    param ($entry, $targetVariable, $asVarRef = 1)
 
     $res = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 0
     return $res
 }
 
 function Remove-From-Env-Variable {
-    param ( $entry, $targetVariable, $asVarRef = 1 )
+    param ($entry, $targetVariable, $asVarRef = 1)
 
     $res = Update-Env-Variable -entry $entry -targetVariable $targetVariable -asVarRef $asVarRef -remove 1
     return $res
 }
 
 function Update-Env-Variable {
-    param( $entry, $targetVariable, $asVarRef = 1, $remove = 0 )
+    param ($entry, $targetVariable, $asVarRef = 1, $remove = 0)
 
     $resolvedEntry = if ($asVarRef -eq 1) { "%$entry%" } else { $entry }
     $currentValue = Get-EnvVar-ByName -name $targetVariable -optimized $true
@@ -392,7 +392,7 @@ function Update-Env-Variable {
 }
 
 function Update-Path-Env-Variable {
-    param( $entry, $asVarRef = 1, $remove = 0 )
+    param ($entry, $asVarRef = 1, $remove = 0)
 
     $res = Update-Env-Variable -entry $entry -targetVariable 'PATH' -asVarRef $asVarRef -remove $remove
     if ($res.code -eq 0) {
@@ -403,7 +403,7 @@ function Update-Path-Env-Variable {
 }
 
 function Print-Messages {
-    param( $messages = @(), $todos = @() )
+    param ($messages = @(), $todos = @())
 
     if ($messages.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
@@ -486,7 +486,7 @@ function Set-EnvVar {
 }
 
 function Remove-PathDuplicates {
-    param($path)
+    param ($path)
 
     $seen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
@@ -534,7 +534,7 @@ function Optimize-SystemPath {
 }
 
 function Get-Optimized-Env {
-    param($name, $value)
+    param ($name, $value)
 
     $envVars = Get-All-EnvVars
 

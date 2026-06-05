@@ -1,6 +1,6 @@
 ﻿
 function Install-Pvm {
-    param($downloadPath)
+    param ($downloadPath)
 
     try {
         if (Is-Tool-Installed -name 'pvm') {

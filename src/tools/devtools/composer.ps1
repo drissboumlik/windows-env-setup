@@ -1,6 +1,6 @@
 ﻿
 function Install-Composer {
-    param($downloadPath)
+    param ($downloadPath)
 
     try {
         if (Is-Tool-Installed -name 'composer') {

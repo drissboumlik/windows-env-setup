@@ -1,6 +1,6 @@
 ﻿
 function Get-EnvConfig {
-    param($rootPath)
+    param ($rootPath)
     
     $envFile = "$rootPath\.env"
 
@@ -37,7 +37,7 @@ function Get-EnvConfig {
 }
 
 function Build-Paths {
-    param($configTable, $rootPath)
+    param ($configTable, $rootPath)
     
     $paths = @{}
     

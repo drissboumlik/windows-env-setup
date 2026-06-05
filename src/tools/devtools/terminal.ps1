@@ -1,6 +1,6 @@
 ﻿
 function Setup-Cmder {
-    param ( $downloadPath )
+    param ($downloadPath)
     try {
         $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_PATH"
 

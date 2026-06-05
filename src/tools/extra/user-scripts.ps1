@@ -7,10 +7,10 @@ function Install-Scripts {
         $scriptsCommandsPath = "$scriptPath\src\commands"
 
         if (Test-Path $scriptsCommandsPath) {
-            return @{ code = 0; messages = @(Set-Warning-Message -message 'User scripts are already installed') }
+            return @{ code = 0; messages = @(Set-Warning-Message -message 'Scripts are already installed') }
         }
 
-        Write-Host "`nDownloading & Extracting User Scripts..."
+        Write-Host "`nDownloading & Extracting Scripts..."
 
         git clone $SCRIPTS_URL $scriptPath > $null 2>&1
 
@@ -42,15 +42,14 @@ function Install-Scripts {
         } | Out-Null
 
         if ($errors.Count -eq 0) {
-            $messages += Set-Success-Message -message 'User scripts were installed successfully'
+            $messages += Set-Success-Message -message 'Scripts were installed successfully'
         } else {
-            $messages += Set-Error-Message -message "User scripts were installed with some issues : `n" + ($errors -join "`n")
+            $messages += Set-Error-Message -message "Scripts were installed with some issues : `n" + ($errors -join "`n")
         }
 
         return @{ code = 0; messages = $messages }
     } catch {
-        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to clone user scripts repository"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone user scripts repository, try again!') }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to clone scripts repository"; exception = $_ }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone scripts repository, try again!') }
     }
 }

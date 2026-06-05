@@ -122,13 +122,14 @@ function Get-User-Answers {
         $questionsList += @{ Index = $index; Key = $key; Question = $q.Question }
         $index++
     }
+    Write-Host "0. Select all" -ForegroundColor Green
 
-    Write-Host "`nEnter your selection (comma/space separated, e.g. 1 2 3 or 1,2,3). Leave blank for none." -ForegroundColor Yellow
+    Write-Host "`nEnter your selection (comma/space separated, e.g. 1 2 3, 1,2,3, or 0 for all). Leave blank for none." -ForegroundColor Yellow
     $userInput = Read-Host "Your choice"
 
     $selectedIndices = @()
     if (-not [string]::IsNullOrWhiteSpace($userInput)) {
-        if ($userInput -match '^(?i)\s*(all|a)\s*$') {
+        if ($userInput -match '^(?i)\s*(all|a|0)\s*$') {
             $selectedIndices = 1..$questionsList.Count
         } else {
             $selectedIndices = ($userInput -split '[,\s]+' | ForEach-Object {

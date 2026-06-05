@@ -11,7 +11,7 @@ function Get-User-Path {
         return $null
     }
 
-    $path = $path.Trim()
+    $path = $path.Trim().TrimEnd('\', '/')
 
     $newLine = "USER_ENV_PATH=$path"
     $envLines = @()

@@ -1,18 +1,6 @@
 ﻿
 function Get-User-Path {
-    param ($readFromEnvFile = $false)
-
-    $path = $null
-
-    if ($readFromEnvFile -and (Test-Path $ENV_FILE)) {
-        Get-Content $ENV_FILE | ForEach-Object {
-            if ($_ -match '^USER_ENV_PATH=(.*)$') {
-                $path = $matches[1].Trim()
-            }
-        }
-    } else {
-        $path = Read-Host "`nWhere would you like to download the tools? (default: $USER_ENV_PATH)"
-    }
+    $path = Read-Host "`nWhere would you like to download the tools? (default: $USER_ENV_PATH)"
 
     if ([string]::IsNullOrWhiteSpace($path)) {
         $path = $USER_ENV_PATH
@@ -25,7 +13,27 @@ function Get-User-Path {
 
     $path = $path.Trim()
 
-    "USER_ENV_PATH=$path" | Set-Content -Path $ENV_FILE -Encoding UTF8
+    $newLine = "USER_ENV_PATH=$path"
+    $envLines = @()
+    if (Test-Path $ENV_FILE) {
+        $envLines = Get-Content -Path $ENV_FILE -ErrorAction SilentlyContinue
+    }
+
+    $updated = $false
+    $resultLines = $envLines | ForEach-Object {
+        if ($_ -match '^(?i)\s*USER_ENV_PATH\s*=') {
+            $updated = $true
+            $newLine
+        } else {
+            $_
+        }
+    }
+
+    if (-not $updated) {
+        $resultLines += $newLine
+    }
+
+    $resultLines | Set-Content -Path $ENV_FILE -Encoding UTF8
 
     return $path
 }

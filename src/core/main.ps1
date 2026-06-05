@@ -99,7 +99,10 @@ function Follow-Up {
 
     $results = @()
 
-    $customPath = Get-User-Path -readFromEnvFile $true
+    $customPath = Get-EnvFileValue -key 'USER_ENV_PATH'
+    if ([string]::IsNullOrWhiteSpace($customPath)) {
+        $customPath = $USER_ENV_PATH
+    }
 
     if ($StepsQuestions['CMDER'].Answer -eq 'yes') {
         $results += Configure-Cmder -cmderPath "$customPath\$CMDER_INSTALLATION_DIRECTORY_NAME"

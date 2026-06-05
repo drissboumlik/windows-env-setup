@@ -118,13 +118,13 @@ function Get-User-Answers {
     $index = 1
     foreach ($key in $StepsQuestions.Keys) {
         $q = $StepsQuestions[$key]
-        Write-Host "$index. $($q.Question)" -ForegroundColor Green
+        Write-Host "$index. $($q.Question)"
         $questionsList += @{ Index = $index; Key = $key; Question = $q.Question }
         $index++
     }
     Write-Host "0. Select all" -ForegroundColor Green
 
-    Write-Host "`nEnter your selection (comma/space separated, e.g. 1 2 3, 1,2,3, or 0 for all). Leave blank for none." -ForegroundColor Yellow
+    Write-Host "`nEnter your selection (comma/space separated, e.g. 1 2 3, 1,2,3, or 0 for all). Leave blank for none." -ForegroundColor Cyan
     $userInput = Read-Host "Your choice"
 
     $selectedIndices = @()
@@ -185,7 +185,7 @@ function Set-Info-Message {
 function Set-Success-Message {
     param ( $message )
 
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :)" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
     return @{
         Message = $message
@@ -197,11 +197,11 @@ function Set-Success-Message {
 function Set-Warning-Message {
     param ( $message )
 
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :|" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
 
     return @{
         Message = $message
-        ForegroundColor = 'Yellow'
+        ForegroundColor = 'DarkGray'
         BackgroundColor = 'Black'
     }
 }
@@ -209,7 +209,7 @@ function Set-Warning-Message {
 function Set-Error-Message {
     param ( $message, $exceptionMessage = $null )
 
-    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd()) :(" }) -join "`n"
+    $message = ($message.split("`n") | ForEach-Object { "- $($_.TrimEnd())" }) -join "`n"
     if ($exceptionMessage) {
         $message += "`n    --> $exceptionMessage"
     }

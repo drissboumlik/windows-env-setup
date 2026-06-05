@@ -10,7 +10,7 @@ function Install-Fonts {
 
         Write-Host "`nDownloading Fonts..."
 
-        $fontsDir = "$downloadPath\$FONTS_INSTALLATION_DIRECTORY_NAME"
+        $fontsDir = "$downloadPath\$FONTS_INSTALLATION_DIRECTORY_PATH"
         $created = Make-Directory -path $fontsDir
         if ($created -ne 0) {
             return @{ code = -1; messages = @(Set-Error-Message -message "Failed to create fonts directory at '$fontsDir'") }

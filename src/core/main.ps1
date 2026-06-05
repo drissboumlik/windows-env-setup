@@ -105,7 +105,7 @@ function Follow-Up {
     }
 
     if ($StepsQuestions['CMDER'].Answer -eq 'yes') {
-        $results += Configure-Cmder -cmderPath "$customPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+        $results += Configure-Cmder -cmderPath "$customPath\$CMDER_INSTALLATION_DIRECTORY_PATH"
     }
 
     $WhatWasDoneMessages = @()

@@ -2,7 +2,7 @@
 function Setup-Cmder {
     param ( $downloadPath )
     try {
-        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_PATH"
 
         if ((Is-Tool-Installed -name 'cmder') -or (Is-Tool-Installed -name "$cmderPath\cmder")) {
             return @{ code = -1; messages = @(Set-Warning-Message -message 'Cmder is already installed') }
@@ -92,7 +92,7 @@ function Install-Cmder {
 
         $result.todos += Set-Info-Message -message "Start cmder and Run 'clink update' to check for any updates"
 
-        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_NAME"
+        $cmderPath = "$downloadPath\$CMDER_INSTALLATION_DIRECTORY_PATH"
         $flexpromptInstaller = Install-Flexprompt -downloadPath $downloadPath -cmderPath $cmderPath
         $result.messages += $flexpromptInstaller.messages
         if ($flexpromptInstaller.todos) {

@@ -8,7 +8,7 @@ function Install-Pvm {
         }
 
         Write-Host "`nDownloading and installing PVM..."
-        $pvmPath = "$downloadPath\$PVM_INSTALLATION_DIRECTORY_NAME"
+        $pvmPath = "$downloadPath\$PVM_INSTALLATION_DIRECTORY_PATH"
         git clone $PVM_URL $pvmPath > $null 2>&1
 
         return @{

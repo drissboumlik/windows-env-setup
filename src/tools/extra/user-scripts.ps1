@@ -1,9 +1,10 @@
 ﻿
-function Install-UserScripts {
+function Install-Scripts {
     param ($downloadPath)
 
     try {
-        $scriptsCommandsPath = "$downloadPath\scripts\src\commands"
+        $scriptPath = "$downloadPath\$SCRIPTS_INSTALLATION_DIRECTORY_PATH"
+        $scriptsCommandsPath = "$scriptPath\src\commands"
 
         if (Test-Path $scriptsCommandsPath) {
             return @{ code = 0; messages = @(Set-Warning-Message -message 'User scripts are already installed') }
@@ -11,7 +12,7 @@ function Install-UserScripts {
 
         Write-Host "`nDownloading & Extracting User Scripts..."
 
-        git clone $USER_SCRIPTS_URL "$downloadPath\scripts" > $null 2>&1
+        git clone $SCRIPTS_URL $scriptPath > $null 2>&1
 
         $toolsPath = "$downloadPath\$TOOLS_INSTALLATION_DIRECTORY_PATH"
         $created = Make-Directory -path $toolsPath

@@ -40,7 +40,7 @@ function Start-Setup {
     }
 
     if ($StepsQuestions['SCRIPTS'].Answer -eq 'yes') {
-        $results += Install-UserScripts -downloadPath $customPath
+        $results += Install-Scripts -downloadPath $customPath
     }
 
     if ($StepsQuestions['TOOLS'].Answer -eq 'yes') {

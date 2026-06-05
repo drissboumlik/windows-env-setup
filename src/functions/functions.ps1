@@ -1,4 +1,68 @@
 
+function Get-EnvConfig {
+    param ($rootPath)
+    
+    $envFile = "$rootPath\.env"
+
+    if (-not (Test-Path $envFile)) {
+        throw ".env file not found in: $rootPath"
+    } else {
+        Write-Verbose "Using .env from: $envFile"
+    }
+    
+    $config = @{}
+    
+    # Read the file and parse key=value pairs
+    Get-Content $envFile | ForEach-Object {
+        # Skip empty lines and comments
+        if ($_ -match '^\s*$' -or $_ -match '^\s*#') {
+            return
+        }
+        
+        # Parse key=value format
+        if ($_ -match '^([^=]+)=(.*)$') {
+            $key = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            
+            # Remove quotes if present (ensures matching quote types)
+            if ($value -match "^([""'])(.*)\1$") {
+                $value = $matches[2]
+            }
+            
+            $config[$key] = $value
+        }
+    }
+    
+    return $config
+}
+
+function Build-Paths {
+    param ($configTable, $rootPath)
+    
+    $paths = @{}
+    
+    foreach ($key in $configTable.Keys) {
+        $value = $configTable[$key]
+        
+        # Keep URLs and absolute/rooted paths unchanged
+        if ($value -match '^https?://' -or [System.IO.Path]::IsPathRooted($value)) {
+            $paths[$key] = $value
+            continue
+        }
+
+        # Leave values unchanged when they do NOT start with assets/ (invert check)
+        if (-not ($value -match '^[aA]ssets[\\/]')) {
+            $paths[$key] = $value
+            continue
+        }
+
+        # Build full path for other relative values
+        $paths[$key] = (Join-Path $rootPath $value)
+    }
+    
+    return $paths
+}
+
 function Get-User-Answers {
 
     $StepsQuestions = [ordered]@{

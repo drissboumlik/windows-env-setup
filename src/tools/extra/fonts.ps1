@@ -40,7 +40,7 @@ function Install-Font {
         $zipPath = "$fontsDir\$zipName"
         $extractPath = "$fontsDir\" + ([IO.Path]::GetFileNameWithoutExtension($zipName))
 
-        if (Is-Directory-Not-Empty -path $extractPath) {
+        if ((Is-Directory-Exists -path $extractPath) -and (Is-Directory-Not-Empty -path $extractPath)) {
             return @{ code = -1; messages = @(Set-Warning-Message -message "The extraction directory '$extractPath' already exists and is not empty. Please remove it before proceeding.") }
         }
 

@@ -67,6 +67,11 @@ function Start-Setup {
         $results += Install-Cmder -downloadPath $customPath
     }
 
+    if (Is-Directory-Empty -path $customPath) {
+        Remove-Directory -path $customPath
+        $WhatWasDoneMessages += Set-Warning-Message -message "The directory '$customPath' was removed as it was empty."
+    }
+
     $results | Foreach-Object {
         $WhatWasDoneMessages += $_.messages
         if ($_.todos) {
@@ -74,18 +79,11 @@ function Start-Setup {
         }
     }
 
-    if (Is-Directory-Empty -path $customPath) {
-        Remove-Directory -path $customPath
-        $WhatWasDoneMessages += Set-Warning-Message -message "The directory '$customPath' was removed as it was empty."
-    }
-
     $res = Update-Path-Env-Variable -entry $DEV_TOOLS_ENV_VAR -asVarRef 1
     if ($res.code -eq 0) {
         $WhatToDoNext += Set-Info-Message -message 'Make sure to restart your terminal for the changes to take effect.'
-        $WhatWasDoneMessages += $res.messages
-    } else {
-        $WhatWasDoneMessages += $res.messages
     }
+    $WhatWasDoneMessages += $res.messages
 
     $WhatToDoNext += Set-Info-Message -message "Run ./followup.bat when you're done for additional cmder configuration"
 

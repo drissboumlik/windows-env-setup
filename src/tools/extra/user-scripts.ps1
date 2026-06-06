@@ -36,20 +36,20 @@ function Install-Scripts {
                     $batContent = $batContent -replace '__FILE_TARGET__', $_.FullName
                     Set-Content -Path $batFilePath -Value $batContent | Out-Null
                 } catch {
-                    $errors += @(Set-Error-Message -message "Failed to create .bat file for '$($_.Name)' command")
+                    $errors += Set-Error-Message -message "Failed to create .bat file for '$($_.Name)' command" -exceptionMessage $_.Exception.Message
                 }
             } | Out-Null
         } | Out-Null
 
-        if ($errors.Count -eq 0) {
-            $messages += Set-Success-Message -message 'Scripts were installed successfully'
-        } else {
+        if ($errors.Count -ne 0) {
             $messages += Set-Error-Message -message "Scripts were installed with some issues : `n" + ($errors -join "`n")
+            return @{ code = -1; messages = $messages }
         }
 
+        $messages += Set-Success-Message -message 'Scripts were installed successfully'
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to clone scripts repository"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone scripts repository, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to clone scripts repository, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }

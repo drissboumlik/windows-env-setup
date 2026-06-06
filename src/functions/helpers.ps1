@@ -318,7 +318,7 @@ function Ensure-PackageInstalled {
         return @{ code = 0; messages = @(Set-Success-Message -message "$chocoName installed successfully") }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to install $chocoName"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message "Exception while installing $chocoName") }
+        return @{ code = -1; messages = @(Set-Error-Message -message "Exception while installing $chocoName" -exceptionMessage $_.Exception.Message) }
     }
 }
 

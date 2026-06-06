@@ -24,9 +24,8 @@ function Install-Fonts {
 
         return @{ code = 0; messages = $allMessages; todos = @( Set-Info-Message -message "Install downloaded fonts from '$fontsDir'." ) }
     } catch {
-        $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Fonts failed to download, try again!') }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Fonts failed to download, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }
 
@@ -69,8 +68,7 @@ function Install-Font {
             messages = @(Set-Success-Message -message "Fonts downloaded and extracted successfully at '$extractPath'");
         }
     } catch {
-        $logged = Log-Data -data @{header = "$($MyInvocation.MyCommand.Name) - Font failed to download/extract"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message "Fonts failed for '$url'") }
+        $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Font failed to download/extract"; exception = $_ }
+        return @{ code = -1; messages = @(Set-Error-Message -message "Fonts failed for '$url'" -exceptionMessage $_.Exception.Message) }
     }
 }

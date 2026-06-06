@@ -10,6 +10,6 @@ function Install-Yq {
         return @{ code = 0; messages = $res.messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - yq failed"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'yq failed to install, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'yq failed to install, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }

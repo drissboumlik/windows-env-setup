@@ -30,8 +30,7 @@ function Install-Git {
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Git failed to install"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Git failed to install, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }
 
@@ -66,6 +65,6 @@ function Configure-Git {
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Failed to configure Git"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to configure Git, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Failed to configure Git, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }

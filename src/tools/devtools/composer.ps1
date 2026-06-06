@@ -29,7 +29,7 @@ function Install-Composer {
         return @{ code = 0; messages = @(Set-Success-Message -message 'Composer was installed successfully') }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Composer failed to install"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Composer failed to install, try again') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Composer failed to install, try again' -exceptionMessage $_.Exception.Message) }
     }
 }
 
@@ -58,6 +58,6 @@ function Install-Composer-V1 {
         return @{ code = 0; messages = $messages }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Composer v1 failed to install"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Composer v1 failed to install, try again') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Composer v1 failed to install, try again' -exceptionMessage $_.Exception.Message) }
     }
 }

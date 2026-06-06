@@ -12,7 +12,6 @@ function Install-Chocolatey {
         return @{ code = 0; messages = @(Set-Success-Message -message 'Chocolatey installed successfully') }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Chocolatey failed to install"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'Chocolatey failed or is already installed, try again') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'Chocolatey failed or is already installed, try again' -exceptionMessage $_.Exception.Message) }
     }
 }

@@ -18,6 +18,6 @@ function Install-Pvm {
         }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - PVM failed to install"; exception = $_ }
-        return @{ code = -1; messages = @(Set-Error-Message -message 'PVM failed to install, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'PVM failed to install, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }

@@ -21,7 +21,6 @@ function Install-Redis {
         return @{ code = 0; messages = @(Set-Success-Message -message 'REDIS was installed successfully') }
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - REDIS failed to install"; exception = $_ }
-
-        return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!') }
+        return @{ code = -1; messages = @(Set-Error-Message -message 'REDIS failed to install, try again!' -exceptionMessage $_.Exception.Message) }
     }
 }

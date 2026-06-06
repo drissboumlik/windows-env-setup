@@ -407,20 +407,20 @@ function Print-Messages {
 
     if ($messages.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
-        Write-Host '# Results :'
+        Write-Host '# Results :' -ForegroundColor Cyan
         foreach ($msg in $messages) {
             Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
     }
     if ($todos.Count -gt 0) {
         Write-Host "`n==========================================================================================`n"
-        Write-Host '# Todos :'
+        Write-Host '# Todos :' -ForegroundColor Cyan
         foreach ($msg in $todos) {
             Write-Host $msg.Message -ForegroundColor $msg.ForegroundColor -BackgroundColor $msg.BackgroundColor
         }
     }
     Write-Host "`n==========================================================================================`n"
-    Write-Host "`nAll tasks completed.`n`n"
+    Write-Host "All tasks completed.`n"
 }
 
 function Is-Admin {

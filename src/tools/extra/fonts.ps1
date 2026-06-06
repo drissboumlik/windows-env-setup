@@ -56,7 +56,7 @@ function Install-Font {
         $extractCode = Extract-Zip -zipPath $zipPath -extractPath $extractPath
         if ($extractCode -ne 0) { throw "Failed to extract zip archive '$zipPath'" }
 
-        Remove-Item -Path $zipPath
+        Remove-Item -Path $zipPath -Force -ErrorAction SilentlyContinue
 
         $fontFiles = Get-ChildItem -Path $extractPath -Include *.ttf, *.otf -Recurse -File -ErrorAction SilentlyContinue
         if (-not $fontFiles -or $fontFiles.Count -eq 0) {

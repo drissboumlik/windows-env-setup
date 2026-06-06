@@ -17,12 +17,19 @@ function Install-Fonts {
         }
 
         $allMessages = @()
+        $overallCode = -1
         foreach ($link in $links) {
             $res = Install-Font -fontsDir $fontsDir -url $link
             if ($res.messages) { $allMessages += $res.messages }
+            if ($res.code -eq 0) { $overallCode = 0 }
         }
 
-        return @{ code = 0; messages = $allMessages; todos = @( Set-Info-Message -message "Install downloaded fonts from '$fontsDir'." ) }
+        $result = @{ code = $overallCode; messages = $allMessages }
+        if ($overallCode -eq 0) {
+            $result.todos = @( Set-Info-Message -message "Install downloaded fonts from '$fontsDir'." )
+        }
+
+        return $result
     } catch {
         $logged = Log-Data -data @{ header = "$($MyInvocation.MyCommand.Name) - Fonts failed to download"; exception = $_ }
         return @{ code = -1; messages = @(Set-Error-Message -message 'Fonts failed to download, try again!' -exceptionMessage $_.Exception.Message) }
